@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+   <div style="text-align:center"><img src="static/images/Kettlebell.svg" height="150"></div>
+   <form method="POST">
+    <h3>Repetitions (absolute)</h3>
+    <button class="val switch left" type="submit" name="submit" value="0"">{{ reps[0] }}</button>
+    <button class="val switch right" type="submit" name="submit" value="1">{{ reps[1] }}</button>
+    <div class="clearing"></div>
+    <h3>Exercises</h3>
+    <table class="kettlebattle">
+     <colgroup width="60%" span="2"></colgroup>
+     <tbody>
+      {% for exercise, rep in exc %}
+      <tr>
+       <td><label class="kb" for="{{ exercise }}">{{ exercise }}</label></td>
+       <td><input class="kb" id="{{ exercise }}" name="{{ exercise }}" type="number" min="0" step="10" value ="{{ rep }}"/></td>
+      </tr>
+      {% endfor %}
+     </tbody>
+    </table>
+    <button class="val switch soil" type="submit" name="submit" value="generate">Generate</button>
+    <div class="clearing"></div>
+    {% if showgen == True %}
+    <h3>Battle!</h3>
+    <div class="copypastabox">
+     {% for line in battletext %}
+     {{ line[1] }} {{ line[0] }}<br>
+     {% endfor %}
+     <b>Total: {{ total }}</b>
+    </div>
+    {% endif %}
+   </form>
+   </div>
+{% endblock %}

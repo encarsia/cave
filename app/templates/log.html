@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+   <h2>Log</h2>
+   {% for pi in pilogs %}
+   <h2 class="sub">{{ pi }}</h2>
+   <h3>Temperature</h3>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Min</th>
+            <th>at</th>
+            <th>Max</th>
+            <th>at</th>
+            <th>Mean</th>
+            <th>Median</th>
+            <th>St.dev</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for day in pilogs[pi] %}
+        <tr>
+            <td>{{ day.date }}</td>
+            <td>{{ day.t_min }}</td>
+            <td>{{ day.t_min_t }}</td>
+            <td>{{ day.t_max }}</td>
+            <td>{{ day.t_max_t }}</td>
+            <td>{{ day.t_mean }}</td>
+            <td>{{ day.t_median }}</td>
+            <td>{{ day.t_stdev }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table>
+   <h3>Humidity</h3>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Min</th>
+            <th>at</th>
+            <th>Max</th>
+            <th>at</th>
+            <th>Mean</th>
+            <th>Median</th>
+            <th>St.dev</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for day in pilogs[pi] %}
+        <tr>
+            <td>{{ day.date }}</td>
+            <td>{{ day.h_min }}</td>
+            <td>{{ day.h_min_t }}</td>
+            <td>{{ day.h_max }}</td>
+            <td>{{ day.h_max_t }}</td>
+            <td>{{ day.h_mean }}</td>
+            <td>{{ day.h_median }}</td>
+            <td>{{ day.h_stdev }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table>
+  {% endfor %}
+  </div>
+{% endblock %}

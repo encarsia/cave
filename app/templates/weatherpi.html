@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+   <h2>Welcome home</h2>
+   {% if comp.indoor %}
+   <div class="infobox">
+    <h2 class="sub">Indoor climate</h2>
+    {% for pi, value in picurrent.items() %}
+    <h3>{{ pi }} ({{ value.time }})</h3>
+    <div class="val tmp left">{{ value.temp }} °C</div>
+    <div class="val hum right">{{ value.hum }} %</div>
+    <div class="clearing"></div>
+    {% endfor %}
+   </div>
+   {% endif %}
+   {% if comp.weather %}
+   <div class="infobox">
+    <h2 class="sub">Current weather in {{ city }}</h2>
+    <div class="val tmp left">{{ temp }} °C</div>
+    <div class="val hum right">{{ hum }} %</div>
+    <div class="clearing"></div>
+    <div class="weatherbox">
+    <a href="https://openweathermap.org/city/{{ city_id }}"><img src="http://openweathermap.org/img/w/{{ icon }}.png" align="right" height="80px"></a>
+    <h4>{{ descr }}</h4>
+    <p>Clouds: {{ clouds }} %</p>
+    <p>Wind: {{ w.descr }}, {{ w.bft }} Beaufort ({{ w.wind_ms }} m/s = {{ w.wind_km }} km/h)</p>
+    {% if rain is not none %}
+    <p>Rain (3 hours): {{ rain }}</p>
+    {% endif %}
+    {% if snow is not none %}
+    <p>Snow (3 hours): {{ snow }}</p>
+    {% endif %}
+    </div>
+   </div>
+   {% endif %}
+   {% if comp.soil %}
+   <div class="infobox">
+    <!-- Source: https://openclipart.org/detail/45043/plant-growing -->
+    <img src="static/images/plant.svg" align="right" height="100px" style="position:relative;right:15px;top:20px">
+    <h2 class="sub">Soil moisture</h2>
+    {% for pot, value in soilcurrent.items() %}
+    <h3>{{ pot }} at {{ value.pi }} ({{ value.date }})</h3>
+    <div class="val soil" style="background-color:{{ value.bg }}">{{ value.txt }}</div>
+    <div class="clearing"></div>
+    {% endfor %}
+   </div>
+   {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+   {% if warn == True %}
+   {% include "missing_data_warning.html" %}
+   {% endif %}
+   <h2>Soil</h2>
+   {% for pi, pot in soil.items() %}
+   <div class="infobox">
+    <h2 class="sub">{{ pi }}</h2>
+    {% for plant, value in pot.items() %}
+    <div class="infobox">
+    <h3>{{ plant }}</h3>
+    <div class="val soil" style="background-color:{{ value.bg }}">{{ value.txt }}</div>
+    <div class="clearing"></div>
+    <p>Last update: {{ value.date }} ({{ value.time }})</p>
+    <p>Current state has been active for {{ value.dur }} days now (since {{ value.durdate }}).</p>
+    </div>
+    {% endfor %}
+   </div>
+   {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% block content %}
+    {% if warn %}
+    THERE WAS AT LEAST ONE ERROR WHILE READING THE DATA
+    Take look at the logfile for more information.
+    {% endif %}
+    {% if sensors.air %}
+    Now ({{ time }})
+    --------------------------------------
+    Temperature:  {{ temp }} °C
+    Humidity: {{ hum }}
+    
+    {{ date }}
+    --------------------------------------
+    Temperature:
+    
+    Minimum: {{ t_min }} °C at {{ t_min_t }}
+    Maximum: {{ t_max }} °C at {{ t_max_t }}
+    Mean: {{ t_mean }} °C<
+    Median: {{ t_median }} °C
+    Standard deviation: {{ t_stdev }} °C
+        
+    Humidity:
+    
+    Minimum: {{ h_min }} % at {{ h_min_t }}
+    Maximum: {{ h_max }} % at {{ h_max_t }}
+    Mean: {{ h_mean }} %
+    Median: {{ h_median }} %
+    Standard deviation: {{ h_stdev }} %
+    {% endif %}
+    {% if sensors.soil %}
+    Soil moisture:
+    {% for pot, value in s.items() %}
+    {{ pot }}: {{ value.txt }}
+    Last update: {{ value.date }} ({{ value.time }})
+    Current state has been active for {{ value.dur }} days now (since {{ value.durdate }})
+    {% endfor %}
+    {% endif %}
+{% endblock %}

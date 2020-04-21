@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+    {% if warn %}
+    {% include "missing_data_warning.html" %}
+    {% endif %}
+    <h2>Welcome to {{ pi_name }}</h2>
+    {% if sensors.air %}
+    <div class="infobox">
+    <h2 class="sub">Now ({{ time }})</h2>
+    <div class="val tmp left">{{ temp }} °C</div>
+    <div class="val hum right">{{ hum }} %</div>
+    <div class="clearing"></div>
+    </div>
+    {% endif %}
+    
+    {% if sensors.soil %}
+    <div class="infobox">
+    <h2 class="sub">Soil moisture</h2>
+    {% for pot, value in s.items() %}
+    <h3>{{ pot }}</h3>
+    <div class="val soil" style="background-color:{{ value.bg }}">{{ value.txt }}</div>
+    <div class="clearing"></div>
+    <div style="margin-top:30pt"><div class="infobox">
+     <p>Last update: {{ value.date }} ({{ value.time }})</p>
+     <p>Current state has been active for {{ value.dur }} days now (since {{ value.durdate }}).</p>
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+    {% endif %}
+
+   {% if lastrecords %}
+   <h2 class="sub">Last 3 records</h2>
+   {% for day in lastrecords %}
+   <h3>{{ day.day }}</h3>
+    <div class="infobox">
+        <h4>Temperature</h4>
+        <p>Minimum: {{ day.t_min }} °C at {{ day.t_min_t }}</p>
+        <p>Maximum: {{ day.t_max }} °C at {{ day.t_max_t }}</p>
+        <p>Mean: {{ day.t_mean }} °C</p>
+        <p>Median: {{ day.t_median }} °C</p>
+        <p>Standard deviation: {{ day.t_stdev }} °C</p>
+    </div>
+    <div class="infobox">
+        <h4>Humidity</h4>
+        <p>Minimum: {{ day.h_min }} % at {{ day.h_min_t }}</p>
+        <p>Maximum: {{ day.h_max }} % at {{ day.h_max_t }}</p>
+        <p>Mean: {{ day.h_mean }} %</p>
+        <p>Median: {{ day.h_median }} %</p>
+        <p>Standard deviation: {{ day.h_stdev }} %</p>
+    </div>
+    <img src="{{ day.plot }}">
+   {% endfor %}
+   <a style="text-decoration:none" href="#top" title="Back to top"><div class="val soil top">Top &#11165;</div></a>
+   <div class="clearing"></div>
+   {% endif %}
+
+  {% if lastrecords %}
+   <h2 class="sub">Log</h2>
+   <h3>Temperature</h3>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Min</th>
+            <th>at</th>
+            <th>Max</th>
+            <th>at</th>
+            <th>Mean</th>
+            <th>Median</th>
+            <th>St.dev</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for day in alldays %}
+        <tr>
+            <td>{{ day.date }}</td>
+            <td>{{ day.t_min }}</td>
+            <td>{{ day.t_min_t }}</td>
+            <td>{{ day.t_max }}</td>
+            <td>{{ day.t_max_t }}</td>
+            <td>{{ day.t_mean }}</td>
+            <td>{{ day.t_median }}</td>
+            <td>{{ day.t_stdev }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table>
+   <h3>Humidity</h3>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Min</th>
+            <th>at</th>
+            <th>Max</th>
+            <th>at</th>
+            <th>Mean</th>
+            <th>Median</th>
+            <th>St.dev</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for day in alldays %}
+        <tr>
+            <td>{{ day.date }}</td>
+            <td>{{ day.h_min }}</td>
+            <td>{{ day.h_min_t }}</td>
+            <td>{{ day.h_max }}</td>
+            <td>{{ day.h_max_t }}</td>
+            <td>{{ day.h_mean }}</td>
+            <td>{{ day.h_median }}</td>
+            <td>{{ day.h_stdev }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table>
+   <a style="text-decoration:none" href="#top" title="Back to top"><div class="val soil top">Top &#11165;</div></a>
+   <div class="clearing"></div>
+   {% endif %}
+
+  </div>
+{% endblock %}

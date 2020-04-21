@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+   {% if warn == True %}
+   {% include "missing_data_warning.html" %}
+   {% endif %}
+   <h2>Last 3 days</h2>
+   {% for pi in pidays %}
+   <h2 class="sub">{{ pi }}</h2>
+   {% for day in pidays[pi] %}
+   <h3>{{ day.day }}</h3>
+    <div class="infobox">
+        <h4>Temperature</h4>
+        <p>Minimum: {{ day.t_min }} °C at {{ day.t_min_t }}</p>
+        <p>Maximum: {{ day.t_max }} °C at {{ day.t_max_t }}</p>
+        <p>Mean: {{ day.t_mean }} °C</p>
+        <p>Median: {{ day.t_median }} °C</p>
+        <p>Standard deviation: {{ day.t_stdev }} °C</p>
+    </div>
+    <div class="infobox">
+        <h4>Humidity</h4>
+        <p>Minimum: {{ day.h_min }} % at {{ day.h_min_t }}</p>
+        <p>Maximum: {{ day.h_max }} % at {{ day.h_max_t }}</p>
+        <p>Mean: {{ day.h_mean }} %</p>
+        <p>Median: {{ day.h_median }} %</p>
+        <p>Standard deviation: {{ day.h_stdev }} %</p>
+    </div>
+    <img src="{{ day.plot }}">
+   {% endfor %}
+  {% endfor %}
+  </div>
+{% endblock %}

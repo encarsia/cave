@@ -1,0 +1,46 @@
+{% block content %}
+  <div class="jumbo">
+    {% if warn %}
+    {% include "missing_data_warning.html" %}
+    {% endif %}
+    {% if sensors.air %}
+    <h2 class="sub">Now ({{ time }})</h2>
+    <div>
+        <div class="val tmp left">{{ temp }} °C</div>
+        <div class="val hum right">{{ hum }} %</div>
+        <div class="clearing"></div>
+    </div>
+    <h2 class="sub">{{ date }}</h2>
+    <div class="infobox">
+        <h4>Temperature</h4>
+        <p>Minimum: {{ t_min }} °C at {{ t_min_t }}</p>
+        <p>Maximum: {{ t_max }} °C at {{ t_max_t }}</p>
+        <p>Mean: {{ t_mean }} °C</p>
+        <p>Median: {{ t_median }} °C</p>
+        <p>Standard deviation: {{ t_stdev }} °C</p>
+    </div>
+    <div class="infobox">
+        <h4>Humidity</h4>
+        <p>Minimum: {{ h_min }} % at {{ h_min_t }}</p>
+        <p>Maximum: {{ h_max }} % at {{ h_max_t }}</p>
+        <p>Mean: {{ h_mean }} %</p>
+        <p>Median: {{ h_median }} %</p>
+        <p>Standard deviation: {{ h_stdev }} %</p>
+    </div>
+    <img src="dayplot.png">
+    {% endif %}
+    {% if sensors.soil %}
+    <h2 class="sub">Soil moisture</h2>
+    {% for pot, value in s.items() %}
+    <h3>{{ pot }}</h3>
+    <div class="val soil" style="background-color:{{ value.bg }}">{{ value.txt }}</div>
+    <div class="clearing"></div>
+    <div style="margin-top:30pt"><div class="infobox">
+     <p>Last update: {{ value.date }} ({{ value.time }})</p>
+     <p>Current state has been active for {{ value.dur }} days now (since {{ value.durdate }}).</p>
+    </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+
+   <h2>Power sockets</h2>
+   <form method="POST">
+    {% for switch in switches %}
+    <h3>{{ switch }}</h3>
+    <button class="val switch left" type="submit" name="submit" value="{{ switch }} on">on</button>
+    <button class="val switch right" type="submit" name="submit" value="{{ switch }} off">off</button>
+    <div class="clearing"></div>
+    {% endfor %}
+   </form>
+
+   {% if intvls %}
+   <h2>Intervals</h2>
+   {% for switch, item in intvls.items() %}
+      <h3>{{ switch }}</h3>
+      {% if item.start %}
+      <table class="socket">
+          <tr>
+          {% for i in range(item.bar.len) %}
+            {% if i <= time %}
+            <td style="opacity:1" class="socket {{ item['bar'][i]['border'] }} {{ item['bar'][i]['bg'] }}"></td>
+            {% else %}
+            <td class="socket {{ item['bar'][i]['border'] }} {{ item['bar'][i]['bg'] }}"></t>
+            {% endif %}
+          {% endfor %}
+          </tr>
+          <tr>
+          {% for i in range(item.bar.len) %}
+          <td style="text-align:{{ item['bar'][i]['align'] }}">{{ item['bar'][i]['descr'] }}</td>
+          {% endfor %}
+          </tr>
+      </table>
+      {% endif %}
+
+      {% if item.min %}
+      <table class="socket">
+          <tr>
+          {% for i in range(item.bar.len) %}
+            {% if item.state == "on" %}
+            <td style="opacity:1" class="socket {{ item['bar'][i]['border'] }} tmp bartext">{{ item['bar'][i]["text"] }}</td>
+            {% else %}
+            <td style="opacity:1" class="socket {{ item['bar'][i]['border'] }} hum bartext">{{ item['bar'][i]["text"] }}</td>
+            {% endif %}
+          {% endfor %}
+          </tr>
+          <tr>
+          {% for i in range(item.bar.len) %}
+          <td style="text-align:{{ item['bar'][i]['align'] }}">{{ item['bar'][i]['descr'] }}</td>
+          {% endfor %}
+          </tr>
+      </table>
+      {% endif %}
+
+   {% endfor %}
+   {% endif %}
+   </div>
+
+{% endblock %}

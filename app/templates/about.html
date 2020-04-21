@@ -1,0 +1,259 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+   <h2>About</h2>
+   <div class="infobox">
+   <h2 class="sub">...CAVE</h2>
+   <table class="log">
+    <tbody>
+        <tr>
+            <td class="sys">App version</td>
+            <td>{{ app_version }}</td>
+        </tr>
+        <tr>
+            <td class="sys">App mode</td>
+            <td>{{ app_mode }}</td>
+        </tr>
+        <tr>
+            <td class="sys">Flask version</td>
+            <td>{{ flask_version }}</td>
+        </tr>
+        <tr>
+            <td class="sys">Python version</td>
+            <td>{{ py_version }}</td>
+        </tr>
+        <tr>
+            <td class="sys">GitHub</td>
+            <td><a href="https://github.com/encarsia/cave">encarsia/cave</a></td>
+        </tr>
+        <tr>
+            <td class="sys">License</td>
+            <td>MIT</td>
+        </tr>
+    </tbody>
+   </table>
+   </div>
+   <div class="infobox">
+   <h2 class="sub">...the system running CAVE</h2>
+   <h3>Generic Info</h3>
+   <table class="log">
+       <tbody>
+           <tr>
+            <td class="sys">Machine Name</td>
+            <td>{{ node }}</td>
+           </tr>
+           <tr>
+            <td class="sys">Logged in as</td>
+            <td>{{ username }}</td>
+           </tr>
+           <tr>
+            <td class="sys">Hardware Type</td>
+            <td>{{ cpu_hardware }}</td>
+           </tr>
+           <tr>
+            <td class="sys">Operating System</td>
+            <td>{{ os_info }}</td>
+           </tr>
+           <tr>
+            <td class="sys">Uptime</td>
+            <td>{{ uptime }}</td>
+           </tr>
+           <tr>
+            <td class="sys">Started</td>
+            <td>{{ starttime }}</td>
+           </tr>
+           <tr>
+            <td class="sys">Network Address</td>
+            <td>{{ ip }}</td>
+           </tr>
+       </tbody>
+   </table>
+   <h3>CPU Details</h3>
+   <table class="log">
+    <tbody>
+        <tr>
+            <td class="sys">Processor Type</td>
+            <td>{{ cpu_name }}</td>
+        </tr>
+        <tr>
+            <td class="sys">Core Frequency</td>
+            <td>{{ core_frequency }}</td>
+        </tr>
+        <tr>
+            <td class="sys">Number of Cores</td>
+            <td>{{ proc_info }}</td>
+        </tr>
+        <tr>
+            <td class="sys">Temperature</td>
+            <td>{{ cpu_temp }}</td>
+        </tr>
+        <tr>
+            <td class="sys">Core Volt</td>
+            <td>{{ core_volt }}</td>
+        </tr>
+    </tbody>
+   </table>
+   <h3>Memory Details</h3>
+   <table class="log">
+    <tbody>
+        <tr>
+            <td class="sys">Total</td>
+            <td>{{ mem_total }} MB</td>
+        </tr>
+        <tr>
+            <td class="sys">Used</td>
+            <td>{{ mem_used }} MB</td>
+        </tr>
+        <tr>
+            <td class="sys">Available</td>
+            <td>{{ mem_available }} MB</td>
+        </tr>
+    </tbody>
+   </table>
+   </div>
+   <div class="infobox">
+   <h2 class="sub">...CAVE's configuration</h2>
+   <h3>Modules</h3>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Available</th>
+            <th>Configured</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="sys">Sensors</td>
+            <td>{% if mod_raspi %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="sys">Weather</td>
+            <td>{% if mod_weather %}Yes{% else %}No{% endif %}</td>
+        </tr>        <tr>
+            <td class="sys">Remote Controlled Power Switches</td>
+            <td>{% if mod_remote %}Yes{% else %}No{% endif %}</td>
+        </tr>        <tr>
+            <td class="sys">Kettlebattle Generator</td>
+            <td>{% if mod_kbgen %}Yes{% else %}No{% endif %}</td>
+        </tr>    </tbody>
+   </table>
+
+   {% if mod_raspi %}
+   <h3>Raspberry Pi</h3>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Air sensor</th>
+            <th>Soil sensor</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pi in raspi %}
+        <tr>
+            <td class="sys">{{ pi }}</td>
+            <td>{{ raspi[pi]["air sensor"] }}</td>
+            <td>{{ raspi[pi]["soil sensor"] }}</td>
+            <td>{{ raspi[pi]["address"] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table>
+   {% endif %}
+
+   {% if mod_weather %}
+   <h3>Weather</h3>
+   <table class="log">
+    <tbody>
+        <tr>
+            <td class="sys">Location</td>
+            <td>{{ weather_loc }}</td>
+        </tr>
+        <tr>
+            <td class="sys">Location ID</td>
+            <td>{{ weather_loc_id }}</td>
+        </tr>
+
+        <tr>
+            <td class="sys">Language</td>
+            <td>{{ weather_lang }}</td>
+        </tr>
+        <tr>
+            <td class="sys">App ID</td>
+            <td>{{ weather_appid }}</td>
+        </tr>
+    </tbody>
+   </table>
+   {% endif %}
+
+   {% if mod_remote %}
+   <h3>Remote switches</h3>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>systemCode</th>
+            <th>unitCode</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for switch, value in switches.items() %}
+        <tr>
+            <td class="sys">{{ switch }}</td>
+            <td>{{ value.systemCode }}</td>
+            <td>{{ value.unitCode }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Relpath to <i>raspberry_remote</i></th>
+        </tr>
+    <tbody>
+        <tr>
+            <td>{{ remote_path }}</td>
+        </tr>
+    </tbody>
+   </table>
+   {% endif %}
+
+
+   {% if mod_kbgen %}
+   <h3>Kettlebattle Generator</h3>
+   <table class="log">
+    <thead>
+        <tr>
+            <th>Exercises</th>
+            <th>Min. at {{ kb_presets[0] }}</th>
+            <th>Min. at {{ kb_presets[1] }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ex, pre in kb_ex.items() %}
+        <tr>
+            <td class="sys">{{ ex }}</td>
+            <td>{{ pre[0] }}</td>
+            <td>{{ pre[1] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table>
+   <table class="log">
+    <tbody>
+        <tr>
+            <td class="sys">Presets</td>
+            <td>{{ kb_presets[0] }}/{{ kb_presets[1] }} repetitions</td>
+        </tr>
+        <tr>
+            <td class="sys">Maximum number of exercises <br> (minimum presets excluded)</td>
+            <td>{{ kb_max }}</td>
+        </tr>
+    </tbody>
+   </table>
+   {% endif %}
+
+  </div>
+{% endblock %}

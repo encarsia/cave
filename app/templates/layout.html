@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cave</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <a href="{{ url_for('index') }}"><h1 class="logo">Cave</h1></a>
+        <nav>
+          <ul class="menu">
+            {% for item in navitems %}
+            {% if "raspi" in item.function %}
+            <li><a href="{{ url_for(item.function, pi=item.menu) }}">{{ item.menu }}</a></li>
+            {% else %}
+            <li><a href="{{ url_for(item.function) }}">{{ item.menu }}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li><a href="{{ url_for('about') }}">About</a></li>
+          </ul> 
+        </nav>
+      </div>
+    </header>
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
+</html>

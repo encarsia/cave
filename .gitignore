@@ -1,0 +1,8 @@
+__pycache__/
+.idea
+**data
+/app/static/plots/
+client_conf.*
+server_conf.*
+logs
+
