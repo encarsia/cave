@@ -38,7 +38,8 @@ def connect():
                 ftp[pi] = ssh_client.open_sftp()
                 app.logger.info(f'[{pi}] SSH connection established.')
             except (paramiko.ssh_exception.SSHException,
-                    paramiko.ssh_exception.NoValidConnectionsError):
+                    paramiko.ssh_exception.NoValidConnectionsError,
+                    OSError):
                 app.logger.error(f'[{pi}] SSH connection failed. ')
     return ssh, ftp
 
@@ -305,6 +306,7 @@ def app_info():
 
 
 def air_prot_plot(air_pis):
+
     def generateplot(t_min_ax, t_max_ax, h_min_ax, h_max_ax):
         # generate plot for the day
         _, ax1 = pyplot.subplots(figsize=(9, 5))
@@ -545,12 +547,7 @@ def air_daemon(pi, model, pin, legacy):
     except FileNotFoundError:
         app.logger.error('No access to data file or it does not exist.')
     except RuntimeError as e:
-        app.logger.warning(f'Could not obtain sensor data. Error message: {e}')
-    except NameError:
-        # raised if no Adafruit package could be loaded
-        app.logger.error('Could not load an Adafruit package to obtain '
-                         'sensor data.')
-        app.config.update(LOCAL_AIR=False)
+        app.logger.warn(f'Could not obtain sensor data. Error message: {e}')
     except Exception:
         app.logger.error('Something went wrong running the DHT sensor '
                          'daemon. Error message: ', exc_info=True)
