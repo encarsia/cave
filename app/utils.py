@@ -1017,6 +1017,10 @@ if app.config["PIGLOW"]:
         app.logger.warning('PiGlow is enabled but loading piglow package '
                            'failed. Check if it is installed.')
         app.config["PIGLOW"] = False
+    except OSError:
+        app.logger.warning('PiGlow is enabled but seems not to be mounted to '
+                           'GPIO. Check hardware.')
+        app.config["PIGLOW"] = False
 
 API_URL = 'http://api.openweathermap.org/data/2.5/{}?{}={' \
           '}&units=metric&lang={}&appid={} '

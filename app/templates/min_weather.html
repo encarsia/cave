@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page }} (Cave)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  </head>
+  <body>
+   <h2>Weather</h2>
+   <div class="lcd">
+   <h3>{{ city }}</h3>
+   <div>
+    <div class="val tmp left">{{ temp }} °C</div>
+    <div class="val hum right">{{ hum }} %</div>
+    <div class="clearing"></div>
+   </div>
+   <div class="infobox">
+        <img src="http://openweathermap.org/img/w/{{ icon }}.png" align="right" height="80px">
+        <h4>{{ descr }}</h4>
+        <p>Clouds: {{ clouds }} %</p>
+        <p>Wind: {{ wind }} m/s</p>
+        <p>Rain: {{ rain }}</p>
+    </div>
+    </div>
+  </body>
+</html>
