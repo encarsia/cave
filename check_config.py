@@ -8,7 +8,14 @@ import sys
 import urllib.request
 import urllib.parse
 import yaml
-import paramiko
+
+try:
+    import paramiko
+    check_ssh = True
+except ModuleNotFoundError:
+    print("\nWARNING: SSH connection can not be checked, install paramiko package first.")
+    check_ssh = False
+
 
 ########################################################################
 ###
@@ -107,14 +114,19 @@ def raspi(mod):
                                      "PI_LIST[pi][\"soil sensor\"]",
                                      "bool"))
             else:
-                if not isinstance(c["PI_LIST"][pi]["pots"], list):
-                    print("WARNING: soil sensor requires additional variable")
-                    print(var_inst_error("plants",
-                                         "PI_LIST[pi][\"pots\"]",
-                                         "list"))
+                # check pots if soil sensor is enabled
+                if c["PI_LIST"][pi]["soil sensor"]:
+                    if not isinstance(c["PI_LIST"][pi]["pots"], list):
+                        print("WARNING: soil sensor requires additional variable")
+                        print(var_inst_error("plants",
+                                             "PI_LIST[pi][\"pots\"]",
+                                             "list"))
+                    else:
+                        print(f"INFO: soil sensor(s) configured ("
+                              f"{c['PI_LIST'][pi]['pots']}).")
                 else:
-                    print(f"INFO: soil sensor(s) configured ("
-                          f"{c['PI_LIST'][pi]['pots']}).")
+                    print("INFO: soil sensor configured.")
+
         except (NameError, KeyError):
             print(attr_error("soil sensor", "PI_LIST[pi][\"soil sensor\"]"))
         # check for air sensor
@@ -128,7 +140,7 @@ def raspi(mod):
         except (NameError, KeyError):
             print(attr_error("air sensor", "PI_LIST[pi][\"air sensor\"]"))
         # connect to network devices and download data files if available
-        if "address" in c["PI_LIST"][pi] != "":
+        if "address" in c["PI_LIST"][pi] != "" and check_ssh:
             ssh_client = paramiko.SSHClient()
             ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             try:
@@ -254,7 +266,8 @@ def remote(mod):
 
     try:
         if not isinstance(c["SOCKET_INTERVALS"], dict):
-            print(var_inst_error("power socket scheduler", "SOCKET_INTERVALS", "dict"))
+            print("INFO: if you want to set temp or time ranges set the SOCKET_INTERVALS variable")
+            # print(var_inst_error("power socket scheduler", "SOCKET_INTERVALS", "dict"))
             return
     except NameError:
         print(attr_error("power socket scheduler", "SOCKET_INTERVALS"))
@@ -448,6 +461,9 @@ if __name__ == '__main__':
         for modname, varname, value, func in MODULES:
             if value:
                 exec("{}('{}')".format(func, modname))
+        # also create log folder
+        check_dir("logs", "logfiles directory")
+
     else:
         print("""
 NO MODULES CONFIGURED.

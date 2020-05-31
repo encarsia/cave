@@ -78,9 +78,9 @@ loggers:
 #    root:
 #        level: DEBUG
 #        handlers: [console, file, file_extra]
-    flask:
-        level: DEBUG
-        handlers: [console, file, file_extra]
+#    flask:
+#        level: DEBUG
+#        handlers: [console, file, file_extra]
     flask.app:
         level: DEBUG
         handlers: [console, file, file_extra]

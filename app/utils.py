@@ -47,6 +47,7 @@ def connect():
 # returns the current day formatted as YYYY-MM-DD formatted which is
 # used for sensor data logging and plots
 # optional arg for timedelta, today(-1) returns yesterday's date
+
 def today(delta=0):
     string = str((datetime.now() + timedelta(days=delta)).strftime('%Y-%m-%d'))
     return string
@@ -332,6 +333,14 @@ def air_prot_plot(air_pis):
                                         ),
                            transparent=True,
                            )
+            # save fig with non-transparent background	
+            pyplot.savefig(os.path.join(app.config["PI_DATA"],
+                                        pi,
+                                        'sensor_air',
+                                        dayplot_wbg,
+                                        ),
+                           transparent=False,
+                           )
             app.logger.info(f'[{pi}] Save dayplot in data directory. OK.')
             pyplot.savefig(os.path.join('app',
                                         'static',
@@ -362,6 +371,7 @@ def air_prot_plot(air_pis):
 
     dayta = 'dayta_{}.csv'.format(today(-1))
     dayplot = 'dayplot_{}.png'.format(today(-1))
+    dayplot_wbg = 'dayplot_{}_wbg.png'.format(today(-1))
 
     for pi in air_pis:
         try:
@@ -534,9 +544,10 @@ def air_daemon(pi, model, pin, legacy):
         # store data in consecutive files, one for each day
 
         with open(os.path.join(app.config["PI_DATA"],
-                               pi,
+                               pi["name"],
                                'sensor_air',
-                               'dayta_{}.csv'.format(today())),
+                               'dayta_{}.csv'.format(today()),
+                               ),
                   'a') as f:
             f.write(data)
 

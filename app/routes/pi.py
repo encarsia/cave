@@ -62,6 +62,9 @@ def raspi(pi):
                 warn = True
                 app.logger.error(f'[{pi}] Something is wrong with the data.',
                                  exc_info=True)
+            
+            except IndexError:
+                app.logger.debug(f"[{pi}] Cannot show last 3 days, missing data.")
 
         for line in values:
             try:

@@ -31,7 +31,7 @@ def get_pis():
                 # does not require a daemon cronjob (see "sensor_scripts")
                 # set up temperature/humidity lookup via apscheduler
                 # this should only be one
-                app.config["LOCAL_AIR"] = pi
+                app.config["LOCAL_AIR"] = {"name": name, "properties": pi}
             if pi["soil sensor"]:
                 # soil sensor installed on the machine CAVE is running on
                 # does not require a daemon cronjob (see "sensor_scripts")
@@ -92,7 +92,7 @@ if app.testing:
     if app.config["LOCAL_AIR"]:
         app.logger.info("TEST MODE: Run air sensor daemon")
         utils.air_daemon(app.config["LOCAL_AIR"],
-                         app.config["AIR_SENSOR_MODEL"],
+                         app.config["AIR_SENSOR"],
                          app.config["AIR_DATA_PIN"],
                          app.config["ADAFRUIT_LEGACY"],
                         )
@@ -176,7 +176,7 @@ else:
         sched.add_job(
             func=utils.air_daemon,
             args=[app.config["LOCAL_AIR"],
-                  app.config["AIR_SENSOR_MODEL"],
+                  app.config["AIR_SENSOR"],
                   app.config["AIR_DATA_PIN"],
                   app.config["ADAFRUIT_LEGACY"],
                  ],

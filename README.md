@@ -29,7 +29,6 @@ Yes, that's a thing. For more information see the [Kettlebattle standalone app (
 
 1. Clone the Git repository or download and unpack the archive.
 1. Set up the webapp.
-1. Set up sensor scripts on your other Raspberry Pi(s) and add cronjobs. (this step will be obsolete)
 
 ## Required packages
 
@@ -48,10 +47,10 @@ $ sudo apt-get install python3 python3-flask python3-flask-mail apache2 libapach
 
 ## Optional packages
 
-* client devices: Paramiko (*python3-paramiko*)
+* run multiple devices (server+client(s)): Paramiko (*python3-paramiko*)
 * PiGlow extension hat (*python3-piglow*)
 * DHT11/22 sensor:
-    * Adafruit_DHT package from [GitHub repository](https://github.com/adafruit/Adafruit_Python_DHT)
+    * Adafruit_DHT package from [GitHub repository](https://github.com/adafruit/Adafruit_Python_DHT), see details below
     * Matplotlib (*python3-matplotlib*)
 * YL-69 sensor: RPi.GPIO (*python-rpi.gpio*)
 
@@ -128,13 +127,13 @@ Second create a virtual host for CAVE. Create a `cave.conf` and save it in `/etc
 
 ```xml
 <virtualhost *:80>
-	ServerName cave
+	ServerName caveserver
 
-	WSGIDaemonProcess cave user=pi group=www-data threads=5 home=/path/to/cave/
+	WSGIDaemonProcess caveserver user=pi group=www-data threads=5 home=/path/to/cave/
 	WSGIScriptAlias / /path/to/cave/cave.wsgi
 
 	<directory /path/to/cave>
-		WSGIProcessGroup cave
+		WSGIProcessGroup caveserver
 		WSGIApplicationGroup %{GLOBAL}
 		WSGIScriptReloading On
 		Require all granted
@@ -143,7 +142,7 @@ Second create a virtual host for CAVE. Create a `cave.conf` and save it in `/etc
 </virtualhost>
 ```
 
-The user that CAVE is running with has to be added to the *www-data* group:
+The user that CAVE is running with (default is "pi") has to be added to the *www-data* group:
 
 
 ```bash
@@ -327,12 +326,14 @@ Currently data visualization is fixed.
 There are two variables to use:
 
     1. `DEF_SWITCH`: definitions for switches that you want to turn on/off via webapp, dictionary format
-    1. `SOCKET_INTERVALS`: turn power sockets on/off with given time or temperature range, dictionary format
+    1. `SOCKET_INTERVALS`: turn power sockets on/off with given time or temperature range, dictionary format (optional)
 
 See the example configuration files for details.
 
 # ToDo
 
+* add annotation module for additional information (photo, text)
+* "admin" mode: show config in browser, reload webserver if edited
 * implement alarm system
 * detailed weather data (optional)
 * enable PiGlow to display weather data instead of indoor sensors (optional)
