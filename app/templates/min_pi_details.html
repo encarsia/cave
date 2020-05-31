@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page }} (Cave)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <meta http-equiv="refresh" content="60">
+  </head>
+  <body>
+   <h2>{{ pi }} ({{ values.time }})</h2>
+   <div class="val tmp left">{{ values.temp }} °C</div>
+   <div class="val hum right">{{ values.hum }} %</div>
+  </body>
+</html>

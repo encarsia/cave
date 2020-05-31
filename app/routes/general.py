@@ -19,30 +19,6 @@ def home():
 </html>'''
 
 
-@app.route('/lcd')
-def display():
-    """Render weather page for Waveshare LCD"""
-    app.logger.debug('Loading small display page...')
-    weather, wind = dict(), None
-    try:
-        weather, wind = utils.get_weather(app.config["LOCATION_ID"],
-                                          'id',
-                                          app.config["APPID"],
-                                          app.config["LANGUAGE"],
-                                          )
-    except AttributeError:
-        weather, wind = utils.get_weather(app.config["LOCATION"],
-                                          'q',
-                                          app.config["APPID"],
-                                          app.config["LANGUAGE"],
-                                          )
-
-    return render_template('min_weather.html',
-                           page="LCD weather",
-                           **weather,
-                           w=wind,
-                           )
-
 @app.route('/testmail', methods=['GET', 'POST'])
 def send_mail():
     """Render testmail page which sends email on request"""

@@ -278,5 +278,32 @@ input.kb {
  */
 
 div.lcd {
-  font-size: 2em;
+  border: 1px solid darkgrey;
+  border-radius: 5px;
+  width: 80%;
+  margin: auto;
+  padding: 5pt 5pt 5pt;
+  margin-bottom: 5pt;
+  font-size: 1.2em;
+  line-height: 10pt;
+}
+
+h2.lcd {
+  font-size: 1.4em;
+  margin-top: 5pt;
+  margin-bottom: 5pt;
+}
+
+.left_lcd {
+  float: left;
+  margin-left: 15%;
+}
+
+.right_lcd {
+  float: right;
+  margin-right: 15%;
+}
+
+.compact {
+  line-height: 3pt;
 }

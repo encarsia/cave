@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page }} (Cave)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <meta http-equiv="refresh" content="60">
+  </head>
+  <body>
+   <h2 class="lcd">Power sockets</h2>
+   <div class="compact">
+   <form method="POST">
+    {% for switch in switches %}
+    <h3>{{ switch }}</h3>
+    <button class="val switch left_lcd" type="submit" name="submit" value="{{ switch }} on">on</button>
+    <button class="val switch right_lcd" type="submit" name="submit" value="{{ switch }} off">off</button>
+    <div class="clearing"></div>
+    {% endfor %}
+   </form>
+
+   {% if intvls %}
+   <h2>Intervals</h2>
+   {% for switch, item in intvls.items() %}
+      <h3>{{ switch }}</h3>
+      {% if item.start %}
+      <table class="socket">
+          <tr>
+          {% for i in range(item.bar.len) %}
+            {% if i <= time %}
+            <td style="opacity:1" class="socket {{ item['bar'][i]['border'] }} {{ item['bar'][i]['bg'] }}"></td>
+            {% else %}
+            <td class="socket {{ item['bar'][i]['border'] }} {{ item['bar'][i]['bg'] }}"></t>
+            {% endif %}
+          {% endfor %}
+          </tr>
+          <tr>
+          {% for i in range(item.bar.len) %}
+          <td style="text-align:{{ item['bar'][i]['align'] }}">{{ item['bar'][i]['descr'] }}</td>
+          {% endfor %}
+          </tr>
+      </table>
+      {% endif %}
+
+      {% if item.min %}
+      <table class="socket">
+          <tr>
+          {% for i in range(item.bar.len) %}
+            {% if item.state == "on" %}
+            <td style="opacity:1" class="socket {{ item['bar'][i]['border'] }} tmp bartext">{{ item['bar'][i]["text"] }}</td>
+            {% else %}
+            <td style="opacity:1" class="socket {{ item['bar'][i]['border'] }} hum bartext">{{ item['bar'][i]["text"] }}</td>
+            {% endif %}
+          {% endfor %}
+          </tr>
+          <tr>
+          {% for i in range(item.bar.len) %}
+          <td style="text-align:{{ item['bar'][i]['align'] }}">{{ item['bar'][i]['descr'] }}</td>
+          {% endfor %}
+          </tr>
+      </table>
+      {% endif %}
+   {% endfor %}
+   {% endif %}
+  </div>
+  </body>
+</html>

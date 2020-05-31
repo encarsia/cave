@@ -107,6 +107,7 @@ elif mode == "server":
     from app.routes import general
     from app.routes import power
     from app.routes import kbgen
+    from app.routes import waveshare
 
 else:
     # this should not happen

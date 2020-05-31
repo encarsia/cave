@@ -9,7 +9,7 @@ from app import app, utils
 def index():
     """Render index/start page"""
     app.logger.debug("Loading home page...")
-    picurrent, weather, wind, soilcurrent = dict(), dict(), None, None
+    picurrent, weather, wind, soilcurrent = dict(), dict(), None, dict()
     components = {'indoor': app.config["SENSORS"],
                   'weather': app.config["WEATHER"],
                   'soil': app.config["SENSORS"],
@@ -32,7 +32,6 @@ def index():
     if components['indoor']:
         app.logger.debug("Loading air sensor information...")
         # DHT22 sensor data from raspis
-        picurrent = dict()
         for pi in app.config["PI_LIST"]:
             if app.config["PI_LIST"][pi]["air sensor"]:
                 time, temp, hum = \
@@ -47,7 +46,6 @@ def index():
     if components['soil']:
         app.logger.debug("Loading soil sensor information...")
         # get YL-69 soil moisture sensor data
-        soilcurrent = dict()
         for name, pi in app.config["PI_LIST"].items():
             if pi["soil sensor"]:
                 for pot in pi['pots']:
