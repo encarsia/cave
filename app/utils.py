@@ -219,9 +219,9 @@ def system_info():
     # http://www.linux-magazin.de/ausgaben/2015/01/flask/ and ##
     # http://www.ashokraja.me/post/Raspberry-Pi-System-Information-Web
     # -Application-with-Python-and-Flask.aspx ## main modifications made in
-    # running subprocess command: ## use 'run' command instead of
-    # depreciated 'check_output' ## avoid 'shell=True' argument because of
-    # security
+    # running subprocess command:
+    ## use 'run' command instead of depreciated 'check_output'
+    ## avoid 'shell=True' argument because of security
     sysinfo = dict()
     # get IP in network
     try:
@@ -304,6 +304,38 @@ def app_info():
                'py_version': sys.version.split()[0],
                }
     return appinfo
+
+
+def camera_daemon(pi_list):
+    for pi, data in pi_list.items():
+        if "camera" in data:
+            if data["camera"]:
+                if data["address"]:
+                    src = os.path.join("/home",
+                                       data['username'],
+                                       "cave",
+                                       "app",
+                                       "static",
+                                       "camera",
+                                       f"{pi}.jpg",
+                                       )
+                    dest = os.path.join("app",
+                                        "static",
+                                        "camera",
+                                        f"{pi}.jpg",
+                                        )
+                    try:
+                        FTP_CONNECTION[pi].get(src, dest)
+                        app.logger.info(f'[{pi}] Copy lates camera image to '
+                                        f'static folder. OK.')
+                    except FileNotFoundError:
+                        app.logger.error(f'[{pi}] Did not find file to copy ({src}).')
+                        raise
+                    except KeyError:
+                        app.logger.error(f'[{pi}] Could not copy file from network'
+                                         f' device.')
+                else:
+                    subprocess.run(f"raspistill -rot 180 -o app/static/camera/{pi}.jpg".split())
 
 
 def air_prot_plot(air_pis):
@@ -902,7 +934,6 @@ def switch_power_socket(name, socket, state):
                                        socket["unitCode"],
                                        SWITCH_POS[state],
                                        )
-    print(cmd)
     app.logger.debug(f"Execute command: {cmd}")
     subprocess.run(cmd, shell=True)
     app.logger.info(f"{name} power socket turned {state}")

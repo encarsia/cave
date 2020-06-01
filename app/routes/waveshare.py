@@ -75,6 +75,7 @@ def powersockets_min():
         name, state = request.form['submit'].split()
         utils.switch_power_socket(name, app.config["DEF_SWITCH"][name], state)
     return render_template('min_powercontrol.html',
+                           page="LCD power",
                            form=request.form,
                            switches=app.config["DEF_SWITCH"],
                            intvls=app.config["SOCKET_INTERVALS"],

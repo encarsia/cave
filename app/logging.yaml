@@ -2,16 +2,16 @@ version: 1
 
 formatters:
     default:
-        format: '%(asctime)s | %(levelname)-8s | %(name)-8s | %(message)s'
+        format: '%(asctime)s | %(levelname)-7s | %(lineno)-4s | %(name)-8s | %(message)s'
         datefmt: '%Y-%m-%d %H:%M:%S'
     scheduler:
-        format: '%(asctime)s | %(levelname)-8s | apscheduler | %(message)s'
+        format: '%(asctime)s | %(levelname)-7s | %(lineno)-4s | apscheduler | %(message)s'
         datefmt: '%Y-%m-%d %H:%M:%S'
     default_extra:
-        format: '%(asctime)s | %(levelname)-8s | %(name)-11s | %(message)s'
+        format: '%(asctime)s | %(levelname)-7s | %(lineno)-4s | %(name)-11s | %(message)s'
         datefmt: '%H:%M:%S'
     scheduler_extra:
-        format: '%(asctime)s | %(levelname)-8s | apscheduler | %(message)s'
+        format: '%(asctime)s | %(levelname)-7s | %(lineno)-4s  | apscheduler | %(message)s'
         datefmt: '%H:%M:%S'
 handlers:
     file:
@@ -78,9 +78,7 @@ loggers:
 #    root:
 #        level: DEBUG
 #        handlers: [console, file, file_extra]
-#    flask:
-#        level: DEBUG
-#        handlers: [console, file, file_extra]
     flask.app:
         level: DEBUG
         handlers: [console, file, file_extra]
+

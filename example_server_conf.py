@@ -67,6 +67,9 @@ PI_LIST = {
     # 'Example Pi': {# minimal setup: enable/disable sensor usage
                      # 'air sensor': False,
                      # 'soil sensor': False,
+                     
+                     # [optional] Raspberry Pi camera module
+                     # 'camera': True,
 
                      # [optional] if air sensor is enabled
                      # set axis of generated plots to 'auto' or range,

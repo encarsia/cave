@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+   <h2>Live preview</h2>
+   {% for pi in pis %}
+   <div class="infobox">
+    <h3 class="sub">{{ pi }}</h3>
+    <img src="static/camera/{{ pi }}.jpg" alt="Camera image from {{ pi }}">
+   </div>
+   {% endfor %}
+{% endblock %}

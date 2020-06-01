@@ -15,6 +15,9 @@
 ### device name, data will be stored in PI_DATA/NAME/...
 NAME = 'ExamplePi'
 
+### [optional] Raspberry Pi camera module
+# CAMERA = True
+
 ### AIR SENSOR ###
 
 ### x,y axis range of air sensor plots that are generated daily

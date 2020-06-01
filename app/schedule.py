@@ -56,6 +56,12 @@ air_pis, soil_pis, remote_pis = get_pis()
 # if in test mode do not run as cron, just execute tasks, also avoids data
 # struggle
 if app.testing:
+
+    if app.config["CAMERA"]:
+        # take photo with camera and collect images from other devices
+        app.logger.info(f"TEST MODE: shoot picture and collect images")
+        utils.camera_daemon(app.config["PI_LIST"])
+
     # only in server mode, ignore if raspis not set
     if app.name == "cave server" and air_pis and remote_pis:
         # get sensor data from network devices at midnight
@@ -88,6 +94,7 @@ if app.testing:
             app.logger.info(f"TEST MODE: PiGlow shows soil sensor data")
             utils.soil_piglow(soil_pis)
 
+
     # air sensor daemon for sensor running on the same machine as CAVE
     if app.config["LOCAL_AIR"]:
         app.logger.info("TEST MODE: Run air sensor daemon")
@@ -102,6 +109,54 @@ if app.testing:
         app.logger.info("TEST MODE: Run soil sensor daemon")
         utils.soil_daemon(app.config["LOCAL_SOIL"], app.config["SOIL_SENSORS"])
 else:
+    # air sensor daemon for sensor running on the same machine as CAVE
+    if app.config["LOCAL_AIR"]:
+        sched.add_job(
+            func=utils.air_daemon,
+            args=[app.config["LOCAL_AIR"],
+                  app.config["AIR_SENSOR"],
+                  app.config["AIR_DATA_PIN"],
+                  app.config["ADAFRUIT_LEGACY"],
+                 ],
+            trigger="cron",
+            minute="0-59",
+            name="Run air sensor daemon",
+        )
+
+    # soil sensor daemon for sensor running on the same machine as CAVE
+    if app.config["LOCAL_SOIL"]:
+        sched.add_job(
+            func=utils.soil_daemon,
+            args=[app.config["LOCAL_SOIL"], app.config["SOIL_SENSORS"]],
+            trigger="cron",
+            hour=app.config["SOIL_INTVL"],
+            name="Run soil sensor daemon",
+        )
+
+    # show soil sensor state on PiGlow
+    if app.config["PIGLOW"] and soil_pis:
+        # read PiGlow LED usage from data file
+        utils.soil_piglow(soil_pis)
+        sched.add_job(
+            func=utils.soil_piglow,
+            args=[soil_pis],
+            trigger="cron",
+            hour=app.config["SOIL_INTVL"],
+            minute="30",
+            name="Show soil sensor state on PiGlow",
+        )
+
+    # take photo on local device and collect remote images
+    if app.config["CAMERA"]:
+        sched.add_job(
+            func=utils.camera_daemon,
+            args=[app.config["PI_LIST"]],
+            trigger="cron",
+            minute="5,15,25,35,45,55",
+            second="30",
+            name="Collect camera images",
+        )
+
     # only in server mode
     if app.name == "cave server":
         if app.config["SENSORS"]:
@@ -171,60 +226,23 @@ else:
                                        f"Check the SOCKET_INTERVALS variable"
                                        f" in config.")
 
-    # air sensor daemon for sensor running on the same machine as CAVE
-    if app.config["LOCAL_AIR"]:
-        sched.add_job(
-            func=utils.air_daemon,
-            args=[app.config["LOCAL_AIR"],
-                  app.config["AIR_SENSOR"],
-                  app.config["AIR_DATA_PIN"],
-                  app.config["ADAFRUIT_LEGACY"],
-                 ],
-            trigger="cron",
-            minute="0-59",
-            name="Run air sensor daemon",
-        )
-
-    # soil sensor daemon for sensor running on the same machine as CAVE
-    if app.config["LOCAL_SOIL"]:
-        sched.add_job(
-            func=utils.soil_daemon,
-            args=[app.config["LOCAL_SOIL"], app.config["SOIL_SENSORS"]],
-            trigger="cron",
-            hour=app.config["SOIL_INTVL"],
-            name="Run soil sensor daemon",
-        )
-
-    # show soil sensor state on PiGlow
-    if app.config["PIGLOW"] and soil_pis:
-        # read PiGlow LED usage from data file
-        utils.soil_piglow(soil_pis)
-        sched.add_job(
-            func=utils.soil_piglow,
-            args=[soil_pis],
-            trigger="cron",
-            hour=app.config["SOIL_INTVL"],
-            minute="30",
-            name="Show soil sensor state on PiGlow",
-        )
-
-    # send daily report mail, only in server mode
-    if app.config["SEND_MAIL"]:
-        # only in server mode
-        if app.name == "cave server":
+        # send daily report mail, only in server mode
+        if app.config["SEND_MAIL"]:
+            # only in server mode
+            if app.name == "cave server":
+                sched.add_job(
+                    func=utils.send_daily_report,
+                    args=[app.config["PI_LIST"]],
+                    trigger="cron",
+                    hour="1",
+                    name="Send daily report mails",
+                )
             sched.add_job(
-                func=utils.send_daily_report,
-                args=[app.config["PI_LIST"]],
+                func=utils.send_daily_log,
                 trigger="cron",
-                hour="1",
-                name="Send daily report mails",
+                hour="23",
+                minute="59",
+                name="Send daily log mail",
             )
-        sched.add_job(
-            func=utils.send_daily_log,
-            trigger="cron",
-            hour="23",
-            minute="59",
-            name="Send daily log mail",
-        )
-    else:
-        app.logger.debug("Sending e-mails is disabled.")
+        else:
+            app.logger.debug("Sending e-mails is disabled.")

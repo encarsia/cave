@@ -16,6 +16,11 @@ There are plenty of manufacturers and models available. Any product that is supp
 
 See [GitHub Home of raspberry-remote](https://github.com/xkonni/raspberry-remote) for details. If not sure you might want to buy a Brennenstuhl product.
 
+You can setup CAVE to automatize switching sockets by time and temperature ranges.
+
+### Camera preview
+
+Use the Rasberry Pi camera module to show a photo (shot every 10 minutes).
 
 ### Weather
 
@@ -25,7 +30,17 @@ Weather data is provided by [OpenWeatherMap](https://openweathermap.org).
 
 Yes, that's a thing. For more information see the [Kettlebattle standalone app (currently archived)](https://github.com/encarsia/kbgen).
 
-## How to start
+## Routes
+
+* `/` or `/index`: configured devices and current sensor values, weather
+* `/ConfiguredPi`: each device has its subpage showing current data, stats and plots of the last 3 days and sensor log tables
+* `/powersockets`: switch sockets, show temp/time ranges if configured
+* `/preview`: Show current photo
+* `/about`: show device, application and configuration information
+* [extra] minimalistic autorefreshing routes adjusted to a 3.2" LCD:
+    * `/weather_min`, `/ConfiguredPi_min`, `/powersockets_min`
+
+# How to start
 
 1. Clone the Git repository or download and unpack the archive.
 1. Set up the webapp.
@@ -325,8 +340,8 @@ Currently data visualization is fixed.
 
 There are two variables to use:
 
-    1. `DEF_SWITCH`: definitions for switches that you want to turn on/off via webapp, dictionary format
-    1. `SOCKET_INTERVALS`: turn power sockets on/off with given time or temperature range, dictionary format (optional)
+1. `DEF_SWITCH`: definitions for switches that you want to turn on/off via webapp, dictionary format
+1. `SOCKET_INTERVALS`: turn power sockets on/off with given time or temperature range, dictionary format (optional)
 
 See the example configuration files for details.
 

@@ -45,3 +45,12 @@ def about():
     sys = utils.system_info()
     configuration = utils.conf_info()
     return render_template('about.html', **sys, **configuration, **appinfo)
+
+@app.route('/preview')
+def camera():
+    app.logger.debug('Loading live camera still...')
+    pis = list()
+    for name, pi in app.config["PI_LIST"].items():
+        if pi["camera"]:
+            pis.append(name)
+    return render_template('preview.html', pis=pis)

@@ -6,6 +6,7 @@ components = [(app.config["REMOTE_POWER"], 'powersockets', 'Socket control'),
               (app.config["KETTLEBATTLE"],
                'kettlebattle_generator',
                'Kettlebattle!'),
+              (app.config["CAMERA"], 'camera', 'Live preview'),
              ]
 
 

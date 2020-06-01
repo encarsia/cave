@@ -4,7 +4,7 @@ from app import app
 
 # Set default config values for running in server mode
 
-local_air, local_soil = False, False
+local_air, local_soil, camera = False, False, False
 
 if app.config["SENSORS"]:
     for _, pi in app.config["PI_LIST"].items():
@@ -13,9 +13,13 @@ if app.config["SENSORS"]:
                 local_air = True
             if pi["soil sensor"]:
                 local_soil = True
+        if "camera" in pi:
+            if pi["camera"]:
+                camera = True
 
 app.config.update(LOCAL_AIR=local_air,
                   LOCAL_SOIL=local_soil,
+                  CAMERA=camera,
                   )
 
 # disable automatation if remote power sockets are deactivated

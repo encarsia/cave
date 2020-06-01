@@ -2,6 +2,7 @@ __pycache__/
 .idea
 **data
 /app/static/plots/
+/app/static/camera/
 client_conf.*
 server_conf.*
 logs

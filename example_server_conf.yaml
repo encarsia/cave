@@ -69,10 +69,13 @@ MAIL_RECIPIENTS:
 ### see below for sensor settings running on the same machine as CAVE
 
 PI_LIST:
-    # Example Pi:
+    # ExamplePi:
         ### minimal setup: enable/disable sensor usage
         # air sensor: False
         # soil sensor: False
+        
+        ### [optional] Raspberry Pi camera module
+        # camera: no
 
         ### [optional] if air sensor is enabled
         ### set axis of generated plots to auto or range
