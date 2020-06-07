@@ -60,11 +60,13 @@ for mode in ("server", "client"):
                 # FullLoader available for PyYaml 5.1+
                 config = yaml.load(f)
         app.config.update(config)
+        app.config["CONF_FILE"] = f"{mode}_conf.yaml"
         app.logger.info(f"{mode.title()} configuration loaded from YAML.")
         break
     except FileNotFoundError:
         try:
-            app.config.from_pyfile(mode)
+            app.config.from_pyfile(f"{mode}_conf")
+            app.config["CONF_FILE"] = f"{mode}_conf.py"
             app.logger.info(f"{mode.title()} configuration loaded from "
                             f"Python file.")
             break
@@ -108,6 +110,7 @@ elif mode == "server":
     from app.routes import power
     from app.routes import kbgen
     from app.routes import waveshare
+    from app.routes import admin
 
 else:
     # this should not happen

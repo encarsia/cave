@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+
+  <h2>Admin area - handle with care</h2>
+  <div id="result"></div>
+  <h3>Configuration file</h3>
+
+  <div><textarea id="code">{{ code }}</textarea></div>
+  <div class="editorbuttons">
+  <button class="val tmp" onclick="revert()">Revert changes</button>
+  <button class="val red" onclick="returnthat()">Save</button>
+  <button class="val red" onclick="restart()">Restart webserver</button>
+  </div>
+  <div class="clearing"></div>
+
+
+<script type=text/javascript>
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+          {% if format == "python" %}
+          mode: {name: "python",
+                 version: 3,
+                 singleLineStringErrors: false,
+          {% elif format == "yaml" %}
+          mode: {name: "yaml",          
+          {% endif %}
+                },
+          lineNumbers: true,
+          });
+
+  var initial_value = editor.getValue()
+
+  function revert() {
+        editor.setValue(initial_value);
+        editor.refresh();
+        }
+
+  function returnthat() {
+        var txt = editor.getValue();
+        $(function(){$.ajax( {
+            type: "POST",
+            url: "{{ url_for("get_post_json") }}",
+            contentType: "application/json",
+            data: JSON.stringify({content: txt}),
+            dataType: "json",
+            success: function(response) {
+                $("#result").html("<div class='val soil red warn'>"+response.message+"</div>");
+                },
+            })
+            
+        });
+        }
+
+  function restart() {
+        $(function(){$.ajax( {
+            type: "POST",
+            url: "{{ url_for("restart_apache") }}",
+            success: function(response) {
+                $("#result").html("<div class='val soil red warn'>"+response.message+"</div>");
+                },
+            })
+            
+        });
+        }
+            
+            
+            
+</script>
+
+{% endblock %}

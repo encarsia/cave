@@ -2,8 +2,13 @@
 <html>
   <head>
     <title>Cave</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='codemirror/lib/codemirror.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='codemirror/lib/codemirror.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='codemirror/mode/python/python.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='codemirror/mode/yaml/yaml.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
   </head>
   <body>
     <header>

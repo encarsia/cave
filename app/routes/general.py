@@ -46,6 +46,7 @@ def about():
     configuration = utils.conf_info()
     return render_template('about.html', **sys, **configuration, **appinfo)
 
+
 @app.route('/preview')
 def camera():
     app.logger.debug('Loading live camera still...')

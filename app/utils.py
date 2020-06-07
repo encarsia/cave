@@ -6,6 +6,7 @@ import json
 import os
 import platform
 import random
+import shutil
 import socket
 import statistics
 import subprocess
@@ -990,6 +991,37 @@ def switch_socket_logentry(time, name, state):
         app.logger.info(f'[{name}] Add socket state to protocol file. Done.')
 
 
+def save_config_file(data):
+    # save old config
+    shutil.copyfile(app.config["CONF_FILE"],
+                    f"{app.config['CONF_FILE']}_backup_{today()}_{now_time()}")
+    # save new config
+    with open(app.config["CONF_FILE"], "w") as f:
+        f.write(data)
+    app.logger.info("New config file saved. Old config kept as backup file.")
+
+
+def reload_apache():
+    # send reload command to the Apache2 server
+    # this only works with changed user rights
+    # https://serverfault.com/questions/919136/restart-or-reload-apache-as-www-data-user
+    cmd = "/etc/init.d/apache2 reload"
+    try:
+        subprocess.run(cmd.split())
+        message = (f"The command has been sent to the server. Reload the "
+                   f"page in a few seconds. If you fucked up the config "
+                   f"you will have to login via SSH to fix this. There is "
+                   f"no more help here.")
+        app.logger.info("Webserver reload command executed.")
+    except FileNotFoundError as e:
+        message = "Could not execute command. See logfile for details."
+        app.logger.error({e})
+    except Exception as e:
+        message = "Something went wrong. See logfile for details."
+        app.logger.error({e}, exc_info=True)
+
+    return message
+
 # read temperature sensor
 if app.config["LOCAL_AIR"]:
     try:
@@ -1000,7 +1032,6 @@ if app.config["LOCAL_AIR"]:
     except ModuleNotFoundError:
         try:
             import adafruit_dht
-
             app.logger.debug("Loaded adafruit_dht package.")
         except ModuleNotFoundError:
             # TODO only use local air variable

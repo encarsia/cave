@@ -110,6 +110,10 @@ h3 {
   background-color: blue;
 }
 
+.red {
+  background-color: red;
+}
+
 .switch {
   background-color: dimgrey;
   font-variant: small-caps;
@@ -135,7 +139,6 @@ h3 {
 }
 
 .warn {
-  background-color: red;
   width: 75%;
 }
 
@@ -168,6 +171,12 @@ h3 {
   padding: 0pt 20pt;
   margin-bottom: 10pt;
   font-size: 1em;
+}
+
+.editorbuttons {
+  margin: auto;
+  font-size: .7em;
+  text-align: center;
 }
 
 .copypastabox {
@@ -272,7 +281,6 @@ input.kb {
   width: 60%;
 }
 
-
 /*
  * styles for 3.2" Waveshare LCD 
  */
@@ -306,4 +314,14 @@ h2.lcd {
 
 .compact {
   line-height: 3pt;
+}
+
+/*
+ * styles for Codemirror editor
+ */
+
+.CodeMirror {
+  width: 95%;
+  margin: auto;
+
 }
