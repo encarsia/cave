@@ -321,7 +321,6 @@ h2.lcd {
  */
 
 .CodeMirror {
-  width: 95%;
+  width: 100%;
   margin: auto;
-
 }

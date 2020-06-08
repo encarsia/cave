@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page }} (Cave)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <meta http-equiv="refresh" content="600">
+  </head>
+  <body>
+   <h2 class="lcd">Live preview ({{ pi }})</h2>
+   <div class="lcd">
+    <img src="static/camera/{{ pi }}.jpg" alt="Camera image from {{ pi }}" style='object-fit: cover'/>
+   </div>
+  </body>
+</html>

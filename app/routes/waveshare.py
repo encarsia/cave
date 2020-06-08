@@ -35,7 +35,7 @@ def weather_min():
 def raspi_min(pi):
     """Render sensor page for Waveshare LCD"""
     app.logger.debug(f'Loading LCD sensor page for {pi}')
-    # add soil info bar later
+    # TODO add soil info bar later
     
     if app.config["PI_LIST"][pi]["air sensor"]:
         app.logger.debug("Loading air sensor information...")
@@ -52,6 +52,17 @@ def raspi_min(pi):
                            pi=pi,
                            values=values,
                            )
+
+
+@app.route('/<pi>_preview_min')
+def preview_min(pi):
+    """Render preview page for Waveshare LCD"""
+    app.logger.debug(f'Loading LCD preview page for {pi}')
+
+    return render_template('min_pi_preview.html',
+                           page=f"LCD {pi} preview",
+                           pi=pi)
+
 
 @app.route('/power_min', methods=['GET', 'POST'])
 def powersockets_min():

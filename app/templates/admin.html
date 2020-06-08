@@ -3,17 +3,42 @@
   <div class="jumbo">
 
   <h2>Admin area - handle with care</h2>
+  <div class="infobox">
   <div id="result"></div>
-  <h3>Configuration file</h3>
-
-  <div><textarea id="code">{{ code }}</textarea></div>
-  <div class="editorbuttons">
-  <button class="val tmp" onclick="revert()">Revert changes</button>
-  <button class="val red" onclick="returnthat()">Save</button>
-  <button class="val red" onclick="restart()">Restart webserver</button>
+    <h2 class="sub">Configuration file</h2>
+    <div><textarea id="code">{{ code }}</textarea></div>
+    <div class="editorbuttons">
+    <button class="val tmp" onclick="revert()">Revert changes</button>
+    <button class="val red" onclick="returnthat()">Save</button>
+    <button class="val red" onclick="restart()">Restart webserver</button>
+    </div>
+    <div class="clearing"></div>
   </div>
-  <div class="clearing"></div>
+  <div class="infobox"> 
+    <h2 class="sub">Routes</h2>
+    <h3>Basic</h3>
+    <ul>
+    <li><a href="../">/index</a></li>
+    <li><a href="../weather_min">/weather_min</a></li>
+    <li><a href="../powersockets">/powersockets</a></li>
+    <li><a href="../power_min">/power_min</a></li>
+    <li><a href="../preview">/preview</a></li>
+    <li><a href="../about">/about</a></li>
+    <li><a href="../admin">/admin</a></li>
+    <li><a href="../testmail">/testmail</a></li>
+    <li><a href="../test">/test</a></li>
+    </ul>
+    <h3>Devices</h3>
+    <ul>
+    {% for pi in pis %}
+    <li><a href="../{{ pi }}">/{{ pi }}</a></li>
+    <li><a href="../{{ pi }}_min">/{{ pi }}_min</a></li>    
+    <li><a href="../{{ pi }}_preview_min">/{{ pi }}_preview_min</a></li>
+    {% endfor %}
+    </ul>
+  </div>
 
+</div>
 
 <script type=text/javascript>
   var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -62,9 +87,6 @@
             
         });
         }
-            
-            
-            
 </script>
 
 {% endblock %}

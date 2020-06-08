@@ -38,7 +38,8 @@ Yes, that's a thing. For more information see the [Kettlebattle standalone app (
 * `/preview`: Show current photo
 * `/about`: show device, application and configuration information
 * [extra] minimalistic autorefreshing routes adjusted to a 3.2" LCD:
-    * `/weather_min`, `/ConfiguredPi_min`, `/powersockets_min`
+    * `/weather_min`, `/ConfiguredPi_min`, `/powersockets_min`, linked on admin page
+* `/admin`: page for administrative tasks, configuration editor, routes list, not linked
 
 # How to start
 
@@ -348,7 +349,6 @@ See the example configuration files for details.
 # ToDo
 
 * add annotation module for additional information (photo, text)
-* "admin" mode: show config in browser, reload webserver if edited
 * implement alarm system
 * detailed weather data (optional)
 * enable PiGlow to display weather data instead of indoor sensors (optional)

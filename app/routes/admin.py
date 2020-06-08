@@ -4,7 +4,7 @@ from flask import render_template, request
 from app import app, utils
 
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/admin')
 def config():
     """Render admin page, load configuration file into codemirror editor"""
     app.logger.debug("Loading admin page...")
@@ -16,7 +16,11 @@ def config():
     with open(app.config["CONF_FILE"]) as f:
         code = f.read()
 
-    return render_template("admin.html", code=code, format=format)
+    return render_template("admin.html",
+                           code=code,
+                           format=format,
+                           pis=app.config["PI_LIST"],
+                           )
 
 
 @app.route('/_get_post_json/', methods=['POST'])
