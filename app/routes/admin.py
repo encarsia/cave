@@ -23,8 +23,8 @@ def config():
                            )
 
 
-@app.route('/_get_post_json/', methods=['POST'])
-def get_post_json():
+@app.route('/_get_content_json/', methods=['POST'])
+def get_content_json():
     data = request.get_json()
     utils.save_config_file(data["content"])
 

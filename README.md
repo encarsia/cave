@@ -349,6 +349,7 @@ See the example configuration files for details.
 # ToDo
 
 * add annotation module for additional information (photo, text)
+* list resources and licences: Codemirror, jQuery, Calendar
 * implement alarm system
 * detailed weather data (optional)
 * enable PiGlow to display weather data instead of indoor sensors (optional)

@@ -111,6 +111,7 @@ elif mode == "server":
     from app.routes import kbgen
     from app.routes import waveshare
     from app.routes import admin
+    from app.routes import calendar
 
 else:
     # this should not happen

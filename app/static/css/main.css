@@ -16,12 +16,12 @@ header {
   width: 100%;
   opacity: .9;
   margin-bottom: 10px;
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
  
 header h1.logo {
-  margin-top: 8px;
-  font-size: 1.1em;
+  margin-top: 10px;
+  font-size: 1.4em;
   color: #fff;
   text-transform: uppercase;
   float: left;
@@ -50,14 +50,14 @@ div.jumbo {
 }
  
 h2 {
-  font-size: 2.5em;
+  font-size: 2.2em;
   margin-top: 30px;
   text-align: center;
   letter-spacing: -2px;
 }
  
 h3 {
-  font-size: 1.5em;
+  font-size: 1.3em;
   font-weight: 100;
   margin-top: 25px;
   text-align: center;
@@ -71,7 +71,7 @@ h3 {
  
 .menu {
   float: right;
-  margin-top: 8px;
+  margin-top: 12px;
 }
  
 .menu li {
@@ -266,8 +266,9 @@ img {
 
 .sub {  
   color: dimgrey;
-  font-size: 2em;
   font-style: italic;
+  font-size: 1.9em;
+
 }
 
 label.kb {
@@ -323,4 +324,87 @@ h2.lcd {
 .CodeMirror {
   width: 100%;
   margin: auto;
+}
+
+/*
+ * styles for calendar
+ */
+
+.calendar-wrapper {
+  width: 360px;
+  margin: 1.8em auto;
+  padding: 1.2em;
+  border: 1px solid #dcdcff;
+  border-radius: 5px;
+  background: #fff;
+}
+table.cal {
+  clear: both;
+  width: 100%;
+  border: 1px solid #dcdcff;
+  border-radius: 3px;
+  border-collapse: collapse;
+  color: #444;
+}
+td.cal {
+  height: 40px;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid #dcdcff;
+  border-top: 1px solid #dcdcff;
+  width: 14.28571429%;
+}
+td.not-current {
+  color: #c0c0c0;
+}
+td.today {
+  font-weight: 700;
+  color: #28283b;
+  font-size: 1.5em;
+}
+thead.cal td.cal {
+  height: 48px;
+  border: none;
+  color: #28283b;
+  text-transform: uppercase;
+  font-size: 1.5em;
+}
+td.info {
+  background-color: powderblue;
+}
+#btnPrev {
+  float: left;
+  margin-bottom: 20px;
+}
+#btnPrev:before {
+  padding-right: 4px;
+}
+#btnNext {
+  float: right;
+  margin-bottom: 20px;
+}
+#btnNext:after {
+  padding-left: 4px;
+}
+#btnPrev,
+#btnNext,
+#btnDay {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  color: #c0c0c0;
+  cursor: pointer;
+  text-transform: uppercase;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#btnPrev:hover,
+#btnNext:hover {
+  color: #28283b;
+  font-weight: bold;
+}
+#btnDay {
+  font-size: inherit;
+  color: inherit;
 }
