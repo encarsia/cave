@@ -327,7 +327,7 @@ def camera_daemon(pi_list):
                                         )
                     try:
                         FTP_CONNECTION[pi].get(src, dest)
-                        app.logger.info(f'[{pi}] Copy lates camera image to '
+                        app.logger.info(f'[{pi}] Copy latest camera image to '
                                         f'static folder. OK.')
                     except FileNotFoundError:
                         app.logger.error(f'[{pi}] Did not find file to copy ({src}).')
@@ -1022,6 +1022,116 @@ def reload_apache():
 
     return message
 
+
+def scan_records(pi_list, path):
+    # generate record log, used for calendar page
+    # TODO use record log instead of reading from files where possible
+
+    def create_record_entry(date, item):
+        # empty dict for date if not already existing
+        r.setdefault(date, {})
+        # empty dict for item if not already existing
+        r[date].setdefault(item, {})
+
+    r = dict()
+    for pi in pi_list:
+        # temphum_protocol, plot
+        # if there is an entry in the protocol there is also a plot so there is no need to store that information
+        try:
+            with open(os.path.join(path,
+                                   pi,
+                                   "sensor_air",
+                                   "temphum_protocol.txt",
+                                   )
+                      ) as f:
+                reader = csv.reader(x.replace('\0', '') for x in f)
+                l = list(reader)
+            for line in l:
+                create_record_entry(line[0], pi)
+                # add summary line
+                r[line[0]][pi]["summary"] = line[1:]
+        except FileNotFoundError:
+            pass
+
+        # soil sensor info
+        try:
+            for filename in os.listdir(os.path.join(path,
+                                                    pi,
+                                                    "sensor_soil",
+                                                    )
+                                       ):
+                with open(os.path.join(path,
+                                       pi,
+                                       "sensor_soil",
+                                       filename,
+                                       )
+                          ) as f:
+                    reader = csv.reader(x.replace('\0', '') for x in f)
+                    l = list(reader)
+                for line in l:
+                    create_record_entry(line[0], pi)
+                    # empty list per plant to store soil records (multiple
+                    # entries per day possible)
+                    _pot = f"{filename[7:-4]}"
+                    r[line[0]][pi].setdefault("soil", {})
+                    r[line[0]][pi]["soil"].setdefault(_pot, [])
+                    # add entry as tuple in list
+                    r[line[0]][pi]["soil"][_pot].append((line[1], line[2]))
+        except FileNotFoundError:
+            pass
+
+    # annotations
+    try:
+        for filename in os.listdir(os.path.join(path,
+                                                "annotations")):
+            with open(os.path.join(path,
+                                   "annotations",
+                                   filename,
+                                   )
+                      ) as f:
+                note = f.read()
+                # empty dict for date if not already existing
+                r.setdefault(f"{filename.split('.')[0]}", {})
+                # add note
+                r[f"{filename.split('.')[0]}"]["note"] = note
+    except FileNotFoundError:
+        pass
+
+    # sockets
+    try:
+        for socket in os.listdir(os.path.join(path,
+                                              "sockets")):
+            for filename in os.listdir(os.path.join(path, "sockets", socket)):
+                with open(os.path.join(path, "sockets", socket, filename)) as f:
+                    reader = csv.reader(x.replace('\0', '') for x in f)
+                    l = list(reader)
+                # daylength protocol
+                if filename == "daylength.txt":
+                    for line in l:
+                        create_record_entry(line[0], socket)
+                        r[line[0]][socket]["daylength"] = {"abs": line[1],
+                                                           "start": line[2],
+                                                           "end": line[3],
+                                                            }
+                else:
+                    # runtime info
+                    _day = f"{filename[17:-4]}"
+                    create_record_entry(_day, socket)
+                    r[_day][socket].setdefault("runtime", [])
+                    for line in l:
+                        # add entry as tuple in list
+                        r[_day][socket]["runtime"].append(
+                            (line[0], line[1]))
+    except FileNotFoundError:
+        pass
+
+    # write dict to JSON file, not used yet
+    with open("data.json", "w") as f:
+        json.dump(r, f, indent=2, sort_keys=True)
+
+    return r
+
+
 # read temperature sensor
 if app.config["LOCAL_AIR"]:
     try:
@@ -1048,6 +1158,11 @@ if app.config["LOCAL_SOIL"]:
         app.config["SOIL_SENSOR"] = False
         app.logger.warning('Could not load RPi.GPIO package to fetch soil '
                            'sensor data. Sensor will not be used.')
+
+# generate record log
+if app.name == "cave server":
+    record_log = scan_records(app.config["PI_LIST"].keys(),
+                              app.config["PI_DATA"])
 
 # plot temperature sensor data
 if app.name == "cave server" and app.config["SENSORS"]:

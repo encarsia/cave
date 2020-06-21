@@ -91,7 +91,7 @@ if mode == "client":
     from app.config import client
     from app import schedule
 
-elif mode == "server":
+else:
     app.name = "cave server"
 
     # Flask starts the logger but pylint bitches about invalid function use
@@ -112,8 +112,3 @@ elif mode == "server":
     from app.routes import waveshare
     from app.routes import admin
     from app.routes import calendar
-
-else:
-    # this should not happen
-    app.logger.error(f"Something is wrong here. {mode}, {app.name}")
-    raise SystemExit

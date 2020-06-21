@@ -186,12 +186,14 @@ function getId(id) {
 $(document).on("click", "#btnDay", function(){
 
     var d = $(this).attr("day");
+    var m = $(this).attr("month");
+    var y = $(this).attr("year");
 
      $(function(){$.ajax( {
             type: "POST",
             url: "_get_post_json/",
             contentType: "application/json",
-            data: JSON.stringify({day: d}),
+            data: JSON.stringify({day: d, month: m, year: y}),
             dataType: "json",
             success: function(response) {
                 $("#result").html("<p>" + response.message + "</p>");

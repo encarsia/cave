@@ -6,4 +6,5 @@ __pycache__/
 client_conf.*
 server_conf.*
 logs
+data.json
 
