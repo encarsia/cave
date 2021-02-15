@@ -91,7 +91,7 @@ def read_remote_csv(pi, filename, complete=False):
             reader = csv.reader(x.replace('\0', '') for x in f)
             data = list(reader)
     except (FileNotFoundError, IndexError, KeyError, TypeError):
-        return  [None, None, None]
+        return [None, None, None]
     if complete:
         return data
     return data[-1]
@@ -221,8 +221,8 @@ def system_info():
     # http://www.ashokraja.me/post/Raspberry-Pi-System-Information-Web
     # -Application-with-Python-and-Flask.aspx ## main modifications made in
     # running subprocess command:
-    ## use 'run' command instead of depreciated 'check_output'
-    ## avoid 'shell=True' argument because of security
+    # use 'run' command instead of depreciated 'check_output'
+    # avoid 'shell=True' argument because of security
     sysinfo = dict()
     # get IP in network
     try:
@@ -244,7 +244,7 @@ def system_info():
             sysinfo[key] = sub.stdout
         except FileNotFoundError:
             sysinfo[key] = 'N/A'
-    ### string operations in shell command output
+    # ## string operations in shell command output
     # memory usage
     sysinfo['mem_total'] = sysinfo['mem'].splitlines()[1].split()[1]
     sysinfo['mem_available'] = sysinfo['mem'].splitlines()[1].split()[6]
@@ -330,17 +330,19 @@ def camera_daemon(pi_list):
                         app.logger.info(f'[{pi}] Copy latest camera image to '
                                         f'static folder. OK.')
                     except FileNotFoundError:
-                        app.logger.error(f'[{pi}] Did not find file to copy ({src}).')
+                        app.logger.error(f'[{pi}] Did not find file to copy'
+                                         f' ({src}).')
                         raise
                     except KeyError:
-                        app.logger.error(f'[{pi}] Could not copy file from network'
+                        app.logger.error(f'[{pi}] Could not copy file from'
+                                         f' network'
                                          f' device.')
                 else:
-                    subprocess.run(f"raspistill -rot 180 -o app/static/camera/{pi}.jpg".split())
+                    subprocess.run(f"raspistill -rot 180 -o app/static/camera/"
+                                   f"{pi}.jpg".split())
 
 
 def air_prot_plot(air_pis):
-
     def generateplot(t_min_ax, t_max_ax, h_min_ax, h_max_ax):
         # generate plot for the day
         _, ax1 = pyplot.subplots(figsize=(9, 5))
@@ -472,7 +474,7 @@ def air_prot_plot(air_pis):
             yesterday = (f'{today(-1)},{max(t_list)},{max_t_time},'
                          f'{min(t_list)},{min_t_time},'
                          f'{statistics.mean(t_list):.1f},'
-                         f'{statistics.median_low(t_list):.1f},' \
+                         f'{statistics.median_low(t_list):.1f},'
                          f'{statistics.stdev(t_list):.2f},{max(h_list)},'
                          f'{max_h_time},{min(h_list)},{min_h_time},'
                          f'{statistics.mean(h_list):.1f},'
@@ -730,7 +732,7 @@ def get_pi_detail_data(pi):
         time, temp, hum = current_air_data(pi,
                                            app.config["PI_LIST"][pi])
         date, t_max, t_max_t, t_min, t_min_t, t_mean, t_median, t_stdev, \
-        h_max, h_max_t, h_min, h_min_t, h_mean, h_median, h_stdev \
+            h_max, h_max_t, h_min, h_min_t, h_mean, h_median, h_stdev \
             = read_csv(os.path.join(app.config["PI_DATA"],
                                     pi,
                                     'sensor_air',
@@ -966,13 +968,15 @@ def power_socket_temp_daemon(name, socket):
             _, state = read_csv(os.path.join(app.config["PI_DATA"],
                                              "sockets",
                                              name,
-                                             f"runtime_protocol_{today(-1)}.txt"),
+                                             f"runtime_protocol_{today(-1)}"
+                                             f".txt"),
                                 2)
         else:
             _, state = read_csv(os.path.join(app.config["PI_DATA"],
                                              "sockets",
                                              name,
-                                             f"runtime_protocol_{today()}.txt"),
+                                             f"runtime_protocol_{today()}"
+                                             f".txt"),
                                 2)
         app.logger.info(f"[{name}] nothing to do here, socket is still"
                         f" {state}")
@@ -1024,8 +1028,9 @@ def reload_apache():
 
 
 def scan_records(pi_list, path):
-    # generate record log, used for calendar page
+    # generate record log on server start, used for calendar page
     # TODO use record log instead of reading from files where possible
+    # TODO dict should be updating when new entries are saved/generated
 
     def create_record_entry(date, item):
         # empty dict for date if not already existing
@@ -1036,7 +1041,8 @@ def scan_records(pi_list, path):
     r = dict()
     for pi in pi_list:
         # temphum_protocol, plot
-        # if there is an entry in the protocol there is also a plot so there is no need to store that information
+        # if there is an entry in the protocol there is also a plot so there
+        # is no need to store that information
         try:
             with open(os.path.join(path,
                                    pi,
@@ -1046,10 +1052,35 @@ def scan_records(pi_list, path):
                       ) as f:
                 reader = csv.reader(x.replace('\0', '') for x in f)
                 l = list(reader)
+
             for line in l:
                 create_record_entry(line[0], pi)
+                r[line[0]][pi]["hardware"] = "pi"
                 # add summary line
-                r[line[0]][pi]["summary"] = line[1:]
+
+                t_max, t_max_t, t_min, t_min_t, t_mean, t_median, t_stdev, \
+                    h_max, h_max_t, h_min, h_min_t, h_mean, h_median, h_stdev \
+                    = line[1:]
+
+                plot = 'static/plots/{}/dayplot_{}.png'.format(pi, line[0])
+
+                r[line[0]][pi]["summary"] = {'t_max': t_max,
+                                             't_max_t': t_max_t,
+                                             't_min': t_min,
+                                             't_min_t': t_min_t,
+                                             't_mean': t_mean,
+                                             't_median': t_median,
+                                             't_stdev': t_stdev,
+                                             'h_max': h_max,
+                                             'h_max_t': h_max_t,
+                                             'h_min': h_min,
+                                             'h_min_t': h_min_t,
+                                             'h_mean': h_mean,
+                                             'h_median': h_median,
+                                             'h_stdev': h_stdev,
+                                             'plot': plot,
+                                             }
+
         except FileNotFoundError:
             pass
 
@@ -1063,11 +1094,10 @@ def scan_records(pi_list, path):
                 with open(os.path.join(path,
                                        pi,
                                        "sensor_soil",
-                                       filename,
-                                       )
-                          ) as f:
+                                       filename)) as f:
                     reader = csv.reader(x.replace('\0', '') for x in f)
                     l = list(reader)
+
                 for line in l:
                     create_record_entry(line[0], pi)
                     # empty list per plant to store soil records (multiple
@@ -1077,6 +1107,7 @@ def scan_records(pi_list, path):
                     r[line[0]][pi]["soil"].setdefault(_pot, [])
                     # add entry as tuple in list
                     r[line[0]][pi]["soil"][_pot].append((line[1], line[2]))
+
         except FileNotFoundError:
             pass
 
@@ -1097,31 +1128,54 @@ def scan_records(pi_list, path):
     except FileNotFoundError:
         pass
 
+    # images
+    try:
+        for filename in os.listdir(os.path.join("app", "static", "log_images")):
+            # empty dict for date if not already existing
+            # extract date
+            d = f"{filename.split('_')[0]}"
+            try:
+                # add images to list
+                r[d]["images"].append(f"static/log_images/{filename}")
+            except (KeyError, NameError):
+                # create empty list before adding first entry
+                r.setdefault(d, {})
+                r[d]["images"] = list()
+                # add images to list
+                r[d]["images"].append(f"static/log_images/{filename}")
+    except FileNotFoundError:
+        pass
+
     # sockets
     try:
         for socket in os.listdir(os.path.join(path,
                                               "sockets")):
             for filename in os.listdir(os.path.join(path, "sockets", socket)):
-                with open(os.path.join(path, "sockets", socket, filename)) as f:
+                with open(
+                        os.path.join(path, "sockets", socket, filename)) as f:
                     reader = csv.reader(x.replace('\0', '') for x in f)
                     l = list(reader)
+
                 # daylength protocol
                 if filename == "daylength.txt":
                     for line in l:
                         create_record_entry(line[0], socket)
+                        r[line[0]][socket]["hardware"] = "socket"
                         r[line[0]][socket]["daylength"] = {"abs": line[1],
                                                            "start": line[2],
                                                            "end": line[3],
-                                                            }
+                                                           }
                 else:
                     # runtime info
                     _day = f"{filename[17:-4]}"
                     create_record_entry(_day, socket)
+                    r[_day][socket]["hardware"] = "socket"
                     r[_day][socket].setdefault("runtime", [])
                     for line in l:
                         # add entry as tuple in list
                         r[_day][socket]["runtime"].append(
                             (line[0], line[1]))
+
     except FileNotFoundError:
         pass
 
@@ -1142,6 +1196,7 @@ if app.config["LOCAL_AIR"]:
     except ModuleNotFoundError:
         try:
             import adafruit_dht
+
             app.logger.debug("Loaded adafruit_dht package.")
         except ModuleNotFoundError:
             # TODO only use local air variable
@@ -1213,8 +1268,8 @@ if app.config["PIGLOW"]:
 API_URL = 'http://api.openweathermap.org/data/2.5/{}?{}={' \
           '}&units=metric&lang={}&appid={} '
 
-######## WIND SPEED DESCRIPTIONS AND CONVERSIONS ##########
-### https://www.skipperguide.de/wiki/Beaufort-Tabelle
+# ####### WIND SPEED DESCRIPTIONS AND CONVERSIONS ##########
+# ## https://www.skipperguide.de/wiki/Beaufort-Tabelle
 
 WIND_BFT = {0: 'calm',
             1: 'light air',

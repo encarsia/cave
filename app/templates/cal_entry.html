@@ -1,2 +1,97 @@
 <!-- Logbook entry rendered on AJAX call -->
-<div>rendered variable: {{ var }} </div>
+
+<div class="val soil" style="background-color:blue">Entry for {{ d }}.{{ m }}.{{ y }}</div>
+
+<form id="upload-file" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <label for="file">Add image</label>
+        <input name="file" type="file" accept="image/*">
+        <button id="upload-file-btn" type="button">Upload</button>
+    </fieldset>
+</form>
+
+{% for key, item in data.items() %}
+
+{% if item.hardware == "pi" %}
+<h2>{{ key }}</h2>
+
+{% if item.summary %}
+<h3>Summary</h3>
+<div class="infobox">
+    <h4>Temperature</h4>
+    <p>Minimum: {{ item.summary.t_min }} °C at {{ item.summary.t_min_t }}</p>
+    <p>Maximum: {{ item.summary.t_max }} °C at {{ item.summary.t_max_t }}</p>
+    <p>Mean: {{ item.summary.t_mean }} °C</p>
+    <p>Median: {{ item.summary.t_median }} °C</p>
+    <p>Standard deviation: {{ item.summary.t_stdev }} °C</p>
+</div>
+<div class="infobox">
+    <h4>Humidity</h4>
+    <p>Minimum: {{ item.summary.h_min }} % at {{ item.summary.h_min_t }}</p>
+    <p>Maximum: {{ item.summary.h_max }} % at {{ item.summary.h_max_t }}</p>
+    <p>Mean: {{ item.summary.h_mean }} %</p>
+    <p>Median: {{ item.summary.h_median }} %</p>
+    <p>Standard deviation: {{ item.summary.h_stdev }} %</p>
+</div>
+<h3>Plot</h3>
+<div><img src="{{ item.summary.plot }}"></div>
+{% endif %}
+{% endif %}
+
+{% if key == "images" %}
+<h2>Images</h2>
+{% for image in item %}
+<div class="infobox"><img src="{{ image }}"></div>
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+
+{% if s %}
+<h2>Sockets</h2>
+<div class="infobox" >
+{% endif %}
+
+{% for key, item in data.items() %}
+
+{% if item.hardware == "socket" %}
+<h3>{{ key }}</h3>
+<div>
+    <table class="log">
+    <tbody>
+        <tr>
+            <th>Time</th>
+            <th>State</th>
+        </tr>
+        {% for entry in item.runtime %}
+        <tr>
+            <td class="sys">{{ entry[0] }}</td>
+            <td>{{ entry[1] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table>
+</div>
+{% endif %}
+
+{% endfor %}
+</div>
+
+<script type=text/javascript>
+$(function() {
+    $('#upload-file-btn').click(function() {
+        var form_data = new FormData($('#upload-file')[0]);
+        $.ajax({
+            type: 'POST',
+            url: '/_upload_image',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                $("#result").html("<p>" + data.message + "</p>");
+            },
+        });
+    });
+});
+</script>

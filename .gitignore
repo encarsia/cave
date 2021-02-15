@@ -3,6 +3,7 @@ __pycache__/
 **data
 /app/static/plots/
 /app/static/camera/
+/app/static/log_images/
 client_conf.*
 server_conf.*
 logs

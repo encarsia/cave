@@ -13,7 +13,7 @@ import os
 from logging.config import dictConfig
 import yaml
 
-from flask import Flask
+from flask import Flask, session
 from flask.logging import create_logger
 
 # load logging configuration from file (dictConfig)
@@ -28,6 +28,7 @@ with open(os.path.join("app", "logging.yaml")) as f:
 app = Flask(__name__)
 app.__version__ = '0.1'
 app.name = "cave"
+app.secret_key = "super secret session key"
 
 # TODO only use in development, use flaskenv
 # test mode:
