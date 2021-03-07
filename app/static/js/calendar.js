@@ -78,7 +78,7 @@ Cal.prototype.showMonth = function(y, m, info) {
   // First day of the week in the selected month
   , firstDayOfMonth = new Date(y, m, 1).getDay()
   // Last day of the selected month
-  , lastDateOfMonth =  new Date(y, m+1, 0).getDate()
+  , lastDateOfMonth = new Date(y, m+1, 0).getDate()
   // Last day of the previous month
   , lastDayOfLastMonth = m == 0 ? new Date(y-1, 11, 0).getDate() : new Date(y, m, 0).getDate();
 
@@ -102,16 +102,37 @@ Cal.prototype.showMonth = function(y, m, info) {
 
     var dow = new Date(y, m, i).getDay();
 
-    // If Sunday, start new row
+    // the calendar template had the weekstart on Sunday for whatever American
+    // reason, of course you want to start your week with the classic resting
+    // day what else...so this is the way of fixing this
+
+    if ( dow == 0 ) {
+      dow = 6;
+      // modify variable otherwise the week will break if the first of month
+      // is a Sunday
+      if ( firstDayOfMonth == 0) {
+      firstDayOfMonth = 7;
+      };
+    }
+    else {
+      dow -= 1;
+    };
+
+    // If Monday, start new row
     if ( dow == 0 ) {
       html += '<tr>';
     }
-    // If not Sunday but first day of the month
+    // If not Monday but first day of the month
     // it will write the last days from the previous month
     else if ( i == 1 ) {
-      html += '<tr>';
-      var k = lastDayOfLastMonth - firstDayOfMonth+1;
-      for(var j=0; j < firstDayOfMonth; j++) {
+      // this line doesn't make a difference if it's commentented or not
+      // html += '<tr>';
+
+      // k is the last month's day to start the week with
+      var k = (lastDayOfLastMonth - firstDayOfMonth) + 2;
+      console.log(k, lastDayOfLastMonth,firstDayOfMonth, dow);
+      for(var j=0; j < firstDayOfMonth - 1; j++) {
+        console.log(k);
         html += '<td class="cal not-current">' + k + '</td>';
         k++;
       }

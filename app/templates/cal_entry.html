@@ -1,14 +1,24 @@
 <!-- Logbook entry rendered on AJAX call -->
 
-<div class="val soil" style="background-color:blue">Entry for {{ d }}.{{ m }}.{{ y }}</div>
-
+<div class="infobox">
 <form id="upload-file" method="post" enctype="multipart/form-data">
     <fieldset>
-        <label for="file">Add image</label>
+        <label>Add image</label>
         <input name="file" type="file" accept="image/*">
         <button id="upload-file-btn" type="button">Upload</button>
     </fieldset>
 </form>
+</div>
+
+<div class="infobox">
+<form id="add-note" method="post" enctype="multipart/form-data">
+    <textarea id="note" name="note" maxlength="250" style="font-size:10pt">{{ data.note }}</textarea>
+    <button id="submit-text-btn" type="button">Save</button>
+</form>
+</div>
+
+{% if e %}
+<div class="val soil" style="background-color:blue">Entry for {{ d }}.{{ m }}.{{ y }}</div>
 
 {% for key, item in data.items() %}
 
@@ -77,6 +87,10 @@
 {% endfor %}
 </div>
 
+{% else %}
+<div class="val soil" style="background-color:orange">No records for {{ d }}.{{ m }}.{{ y }}</div>
+{% endif %}
+
 <script type=text/javascript>
 $(function() {
     $('#upload-file-btn').click(function() {
@@ -84,6 +98,20 @@ $(function() {
         $.ajax({
             type: 'POST',
             url: '/_upload_image',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                $("#result").html("<p>" + data.message + "</p>");
+            },
+        });
+    });
+    $('#submit-text-btn').click(function() {
+        var form_data = new FormData($('#add-note')[0]);
+        $.ajax({
+            type: 'POST',
+            url: '/_add_note',
             data: form_data,
             contentType: false,
             cache: false,

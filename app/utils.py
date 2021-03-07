@@ -1094,7 +1094,9 @@ def scan_records(pi_list, path):
                 with open(os.path.join(path,
                                        pi,
                                        "sensor_soil",
-                                       filename)) as f:
+                                       filename,
+                                       )
+                          ) as f:
                     reader = csv.reader(x.replace('\0', '') for x in f)
                     l = list(reader)
 
@@ -1130,7 +1132,11 @@ def scan_records(pi_list, path):
 
     # images
     try:
-        for filename in os.listdir(os.path.join("app", "static", "log_images")):
+        for filename in os.listdir(os.path.join("app",
+                                                "static",
+                                                "log_images",
+                                                )
+                                   ):
             # empty dict for date if not already existing
             # extract date
             d = f"{filename.split('_')[0]}"
