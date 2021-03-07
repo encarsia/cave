@@ -1,9 +1,9 @@
 <!-- Logbook entry rendered on AJAX call -->
 
 <div class="infobox">
+<h3>Add image...</h3>
 <form id="upload-file" method="post" enctype="multipart/form-data">
     <fieldset>
-        <label>Add image</label>
         <input name="file" type="file" accept="image/*">
         <button id="upload-file-btn" type="button">Upload</button>
     </fieldset>
@@ -11,8 +11,9 @@
 </div>
 
 <div class="infobox">
+<h3>Note (max. 250 characters)</h3>
 <form id="add-note" method="post" enctype="multipart/form-data">
-    <textarea id="note" name="note" maxlength="250" style="font-size:10pt">{{ data.note }}</textarea>
+    <textarea id="note" name="note" maxlength="250" style="font-size:14pt" rows="10" cols="60">{{ data.note }}</textarea>
     <button id="submit-text-btn" type="button">Save</button>
 </form>
 </div>
@@ -50,13 +51,14 @@
 
 {% if key == "images" %}
 <h2>Images</h2>
+<div class="infobox">
 {% for image in item %}
-<div class="infobox"><img src="{{ image }}"></div>
+<div style="text-align:center;padding:10px;display:block"><img src="{{ image }}"></div>
 {% endfor %}
 {% endif %}
 
 {% endfor %}
-
+</div>
 {% if s %}
 <h2>Sockets</h2>
 <div class="infobox" >

@@ -72,13 +72,13 @@ def raspi(mod):
     # check sensor data path
     try:
         # check filetype
-        if not isinstance(c["PI_DATA"], str):
-            print(var_inst_error("data storage", "PI_DATA", "str"))
+        if not isinstance(c["APP_DATA"], str):
+            print(var_inst_error("data storage", "APP_DATA", "str"))
             return
         # create subfolder if not already existing
-        check_dir(c["PI_DATA"], "data storage")
+        check_dir(c["APP_DATA"], "data storage")
     except NameError:
-        print(attr_error("data storage", "PI_DATA"))
+        print(attr_error("data storage", "APP_DATA"))
     # check PI_LIST type
     try:
         if not isinstance(c["PI_LIST"], dict):
@@ -93,10 +93,10 @@ def raspi(mod):
         if not isinstance(c["PI_LIST"][pi], dict):
             print(var_inst_error("RPi in list", "PI_LIST[pi]", "dict"))
             return
-        check_dir(os.path.join(c["PI_DATA"], pi), f"{pi} subfolder")
-        check_dir(os.path.join(c["PI_DATA"], pi, "sensor_air"),
+        check_dir(os.path.join(c["APP_DATA"], pi), f"{pi} subfolder")
+        check_dir(os.path.join(c["APP_DATA"], pi, "sensor_air"),
                   f"{pi} air sensor subfolder")
-        check_dir(os.path.join(c["PI_DATA"], pi, "sensor_soil"),
+        check_dir(os.path.join(c["APP_DATA"], pi, "sensor_soil"),
                   f"{pi} soil sensor subfolder")
         check_dir(os.path.join("app", "static", "plots", pi),
                   f"{pi} static files subfolder")
@@ -153,7 +153,7 @@ def raspi(mod):
                 print("INFO: SSH connection established. OK.")
                 try:
                     ftp_client.chdir(os.path.join(c["PI_LIST"][pi]["installdir"],
-                                                  c["PI_DATA"],
+                                                  c["APP_DATA"],
                                                   pi)
                                      )
                 except FileNotFoundError:
@@ -165,7 +165,7 @@ def raspi(mod):
                         for f in ftp_client.listdir(sub):
                             try:
                                 ftp_client.get(os.path.join(sub, f),
-                                               os.path.join(c["PI_DATA"],
+                                               os.path.join(c["APP_DATA"],
                                                             pi,
                                                             sub,
                                                             f,
@@ -186,7 +186,7 @@ def raspi(mod):
     # copy plots to static folder
     print("\nINFO: copy existing plots to static folder...")
     for pi in c["PI_LIST"]:
-        for path, sub, files in os.walk(os.path.join(c["PI_DATA"], pi)):
+        for path, sub, files in os.walk(os.path.join(c["APP_DATA"], pi)):
             for f in files:
                 if f.endswith(".png"):
                     shutil.copy(os.path.join(path, f),
@@ -252,7 +252,7 @@ def remote(mod):
     except NameError:
         print(attr_error("power socket definition list", "DEF_SWITCH"))
         return
-    check_dir(os.path.join(c["PI_DATA"], "sockets"), f"socket subfolder")
+    check_dir(os.path.join(c["APP_DATA"], "sockets"), f"socket subfolder")
     # check switch entries
     for name, switch in c["DEF_SWITCH"].items():
         if not isinstance(switch, dict):
@@ -262,7 +262,7 @@ def remote(mod):
             print(switch_error(name))
             continue
         print(f"INFO: socket {name} configured (systemCode {switch['systemCode']}, unitCode {switch['unitCode']})")
-        check_dir(os.path.join(c["PI_DATA"], "sockets", name), f"{name} socket subfolder")
+        check_dir(os.path.join(c["APP_DATA"], "sockets", name), f"{name} socket subfolder")
 
     try:
         if not isinstance(c["SOCKET_INTERVALS"], dict):

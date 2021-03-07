@@ -73,7 +73,7 @@ def powersockets_min():
     if app.config["SOCKET_INTERVALS"]:
         for name, socket in app.config["SOCKET_INTERVALS"].items():
             if "min" and "max" and "sensor" in socket:
-                _, state = utils.read_csv(os.path.join(app.config["PI_DATA"],
+                _, state = utils.read_csv(os.path.join(app.config["APP_DATA"],
                                                        "sockets",
                                                        name,
                                                        f"runtime_protocol_{utils.today()}.txt"),

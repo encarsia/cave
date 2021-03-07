@@ -10,9 +10,9 @@
 ### edit this file to match your needs ###
 
 ### path to sensor data files, relpath from Flask app dir
-# PI_DATA = 'app/data'
+# APP_DATA = 'app/data'
 
-### device name, data will be stored in PI_DATA/NAME/...
+### device name, data will be stored in APP_DATA/NAME/...
 NAME = 'ExamplePi'
 
 ### [optional] Raspberry Pi camera module
@@ -26,7 +26,7 @@ NAME = 'ExamplePi'
 
 ### one air sensor seems sufficient but multiple soil sensors are a
 ### realistic option so these can be defined in 'pots'
-### data is stored in PI_DATA/NAME/sensor_soil/pothum_plantname.csv
+### data is stored in APP_DATA/NAME/sensor_soil/pothum_plantname.csv
 
 AIR_SENSOR = True
 PLOT_AXIS = 'auto',

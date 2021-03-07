@@ -113,7 +113,7 @@ def add_note():
     # update record log dict
     utils.record_log[key]["note"] = text
     # save note as text file
-    with open(os.path.join(app.config["PI_DATA"],
+    with open(os.path.join(app.config["APP_DATA"],
                            "annotations",
                            f"{key}.txt",
                            ),

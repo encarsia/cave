@@ -361,7 +361,7 @@ def air_prot_plot(air_pis):
         pyplot.xticks(range(0, len(xlabels)), xlabels)
         ax1.xaxis.set_major_locator(ticker.MultipleLocator(60))
         try:
-            pyplot.savefig(os.path.join(app.config["PI_DATA"],
+            pyplot.savefig(os.path.join(app.config["APP_DATA"],
                                         pi,
                                         'sensor_air',
                                         dayplot,
@@ -369,7 +369,7 @@ def air_prot_plot(air_pis):
                            transparent=True,
                            )
             # save fig with non-transparent background	
-            pyplot.savefig(os.path.join(app.config["PI_DATA"],
+            pyplot.savefig(os.path.join(app.config["APP_DATA"],
                                         pi,
                                         'sensor_air',
                                         dayplot_wbg,
@@ -395,7 +395,7 @@ def air_prot_plot(air_pis):
         pyplot.close()  # close figure
 
         # write statistic values to long term protocol
-        with open(os.path.join(app.config["PI_DATA"],
+        with open(os.path.join(app.config["APP_DATA"],
                                pi,
                                'sensor_air',
                                'temphum_protocol.txt'),
@@ -410,7 +410,7 @@ def air_prot_plot(air_pis):
 
     for pi in air_pis:
         try:
-            path = os.path.join(app.config["PI_DATA"],
+            path = os.path.join(app.config["APP_DATA"],
                                 pi,
                                 'sensor_air',
                                 dayta,
@@ -523,7 +523,7 @@ def air_prot_plot(air_pis):
                              f'{socket["start"]},'
                              f'{socket["stop"]}'
                              f'\n')
-                with open(os.path.join(app.config["PI_DATA"],
+                with open(os.path.join(app.config["APP_DATA"],
                                        "sockets",
                                        name,
                                        "daylength.txt"),
@@ -578,7 +578,7 @@ def air_daemon(pi, model, pin, legacy):
             datetime.now().strftime('%H:%M'), temp, hum)
         # store data in consecutive files, one for each day
 
-        with open(os.path.join(app.config["PI_DATA"],
+        with open(os.path.join(app.config["APP_DATA"],
                                pi["name"],
                                'sensor_air',
                                'dayta_{}.csv'.format(today()),
@@ -616,7 +616,7 @@ def soil_daemon(pi, pots):
                                          state,
                                          )
         app.logger.debug(f'Sensor data: {sensordata}')
-        with open(os.path.join(app.config["PI_DATA"],
+        with open(os.path.join(app.config["APP_DATA"],
                                pi,
                                'sensor_soil',
                                'pothum_{}.csv'.format(pot)),
@@ -648,7 +648,7 @@ def soil_daemon(pi, pots):
 def soil_piglow(soil_pis):
     for pi in soil_pis:
         for pot in app.config["PI_LIST"][pi]["pots"]:
-            _, _, state = read_csv(os.path.join(app.config["PI_DATA"],
+            _, _, state = read_csv(os.path.join(app.config["APP_DATA"],
                                                 pi,
                                                 'sensor_soil',
                                                 'pothum_{}.csv'.format(pot),
@@ -668,12 +668,12 @@ def get_sensor_data(remote_pis):
         src = os.path.join('/home',
                            user,
                            path,
-                           app.config["PI_DATA"],
+                           app.config["APP_DATA"],
                            pi,
                            sub,
                            filename,
                            )
-        dest = os.path.join(app.config["PI_DATA"],
+        dest = os.path.join(app.config["APP_DATA"],
                             pi,
                             sub,
                             filename,
@@ -733,7 +733,7 @@ def get_pi_detail_data(pi):
                                            app.config["PI_LIST"][pi])
         date, t_max, t_max_t, t_min, t_min_t, t_mean, t_median, t_stdev, \
             h_max, h_max_t, h_min, h_min_t, h_mean, h_median, h_stdev \
-            = read_csv(os.path.join(app.config["PI_DATA"],
+            = read_csv(os.path.join(app.config["APP_DATA"],
                                     pi,
                                     'sensor_air',
                                     'temphum_protocol.txt',
@@ -784,7 +784,7 @@ def current_air_data(pi, pi_detail):
                                           os.path.join("/home",
                                                        pi_detail["username"],
                                                        pi_detail["installdir"],
-                                                       app.config["PI_DATA"],
+                                                       app.config["APP_DATA"],
                                                        pi,
                                                        "sensor_air",
                                                        "dayta_{}.csv".format(
@@ -793,7 +793,7 @@ def current_air_data(pi, pi_detail):
                                           )
     else:
         # get current data from locally stored data
-        time, temp, hum = read_csv(os.path.join(app.config["PI_DATA"],
+        time, temp, hum = read_csv(os.path.join(app.config["APP_DATA"],
                                                 pi,
                                                 'sensor_air',
                                                 'dayta_{}.csv'.format(today()),
@@ -810,7 +810,7 @@ def current_soil_data(pi, pi_detail, pot):
                             os.path.join("/home",
                                          pi_detail["username"],
                                          pi_detail["installdir"],
-                                         app.config["PI_DATA"],
+                                         app.config["APP_DATA"],
                                          pi,
                                          "sensor_soil",
                                          f"pothum_{pot}.csv",
@@ -818,7 +818,7 @@ def current_soil_data(pi, pi_detail, pot):
                             )
     else:
         # get current data from locally stored data
-        date, timestamp, state = read_csv(os.path.join(app.config["PI_DATA"],
+        date, timestamp, state = read_csv(os.path.join(app.config["APP_DATA"],
                                                        pi,
                                                        'sensor_soil',
                                                        f'pothum_{pot}.csv',
@@ -834,7 +834,7 @@ def all_soil_data(pi, pi_detail, pot):
                                os.path.join("/home",
                                             pi_detail["username"],
                                             pi_detail["installdir"],
-                                            app.config["PI_DATA"],
+                                            app.config["APP_DATA"],
                                             pi,
                                             "sensor_soil",
                                             f"pothum_{pot}.csv",
@@ -843,7 +843,7 @@ def all_soil_data(pi, pi_detail, pot):
                                )
     else:
         # get current data from locally stored data
-        data = read_csv(os.path.join(app.config["PI_DATA"],
+        data = read_csv(os.path.join(app.config["APP_DATA"],
                                      pi,
                                      'sensor_soil',
                                      f'pothum_{pot}.csv',
@@ -965,14 +965,14 @@ def power_socket_temp_daemon(name, socket):
     else:
         # get last state
         if time == "00:00":
-            _, state = read_csv(os.path.join(app.config["PI_DATA"],
+            _, state = read_csv(os.path.join(app.config["APP_DATA"],
                                              "sockets",
                                              name,
                                              f"runtime_protocol_{today(-1)}"
                                              f".txt"),
                                 2)
         else:
-            _, state = read_csv(os.path.join(app.config["PI_DATA"],
+            _, state = read_csv(os.path.join(app.config["APP_DATA"],
                                              "sockets",
                                              name,
                                              f"runtime_protocol_{today()}"
@@ -986,7 +986,7 @@ def power_socket_temp_daemon(name, socket):
 def switch_socket_logentry(time, name, state):
     # log to file
     logentry = f"{time},{state}\n"
-    with open(os.path.join(app.config["PI_DATA"],
+    with open(os.path.join(app.config["APP_DATA"],
                            "sockets",
                            name,
                            f"runtime_protocol_{today()}.txt"),
@@ -1223,7 +1223,7 @@ if app.config["LOCAL_SOIL"]:
 # generate record log
 if app.name == "cave server":
     record_log = scan_records(app.config["PI_LIST"].keys(),
-                              app.config["PI_DATA"])
+                              app.config["APP_DATA"])
 
 # plot temperature sensor data
 if app.name == "cave server" and app.config["SENSORS"]:

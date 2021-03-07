@@ -41,15 +41,15 @@ MAIL_RECIPIENTS = ['post@mydomain.tld']
 # SENSORS = True
 
 ### data structure is
-### PI_DATA/
-### PI_DATA/RASPI1/sensor_air/
-### PI_DATA/RASPI1/sensor_soil/
-### PI_DATA/RASPI2
+### APP_DATA/
+### APP_DATA/RASPI1/sensor_air/
+### APP_DATA/RASPI1/sensor_soil/
+### APP_DATA/RASPI2
 ### ...
 
 ### path to sensor data files, relative path from Flask app dir
 ### defaults to 'app/data'
-# PI_DATA = 'app/data'
+# APP_DATA = 'app/data'
 
 ### LIST OF RASPBERRY PIS
 
@@ -59,7 +59,7 @@ MAIL_RECIPIENTS = ['post@mydomain.tld']
 
 ### one air sensor seems sufficient but multiple soil sensors are a
 ### realistic option so these can be defined in 'pots'
-### data is stored in PI_DATA/Raspi/sensor_soil/pothum_plantname.csv
+### data is stored in APP_DATA/Raspi/sensor_soil/pothum_plantname.csv
 
 ### see below for sensor settings running on the same machine as CAVE
 

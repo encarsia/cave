@@ -15,7 +15,7 @@ def raspi(pi):
     if app.config["PI_LIST"][pi]['air sensor']:
         lastrecords, alldays = list(), list()
         # read the protocol file
-        values = utils.read_csv(os.path.join(app.config["PI_DATA"],
+        values = utils.read_csv(os.path.join(app.config["APP_DATA"],
                                              pi,
                                              'sensor_air',
                                              'temphum_protocol.txt',
