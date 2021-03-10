@@ -343,6 +343,7 @@ def camera_daemon(pi_list):
 
 
 def air_prot_plot(air_pis):
+
     def generateplot(t_min_ax, t_max_ax, h_min_ax, h_max_ax):
         # generate plot for the day
         _, ax1 = pyplot.subplots(figsize=(9, 5))
@@ -1025,6 +1026,11 @@ def reload_apache():
         app.logger.error({e}, exc_info=True)
 
     return message
+
+
+def update_record_log_daemon(pi_list, path):
+    global record_log
+    record_log = scan_records(pi_list, path)
 
 
 def scan_records(pi_list, path):

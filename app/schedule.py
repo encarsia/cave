@@ -159,6 +159,17 @@ else:
 
     # only in server mode
     if app.name == "cave server":
+
+        # reload record log dict after plot and summary generation
+        sched.add_job(
+            func=utils.update_record_log_daemon,
+            args=[app.config["PI_LIST"].keys(), app.config["APP_DATA"]],
+            trigger="cron",
+            hour="0",
+            minute="5",
+            name="Reload record log dictionary",
+        )
+
         if app.config["SENSORS"]:
             # get sensor data from network devices at midnight
             sched.add_job(

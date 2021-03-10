@@ -6,6 +6,31 @@
    <div class="infobox">
     <h3 class="sub">{{ pi }}</h3>
     <img src="static/camera/{{ pi }}.jpg" alt="Camera image from {{ pi }}">
+    <form id="save-file" data-name="app/static/camera/{{ pi }}.jpg" method="post" enctype="multipart/form-data">
+      <button id="save-file-btn" type="button">Save image to log</button>
+      <div id="result"></div>
+    </form>
    </div>
    {% endfor %}
+  </div>
+
+<script type=text/javascript>
+$(function() {
+    $('#save-file-btn').click(function() {
+<!--        var form_data = new FormData($('#save-file')[0]);-->
+        var filename = $('#save-file').data()
+        $.ajax({
+            type: 'POST',
+            url: '/_save_image',
+            contentType: "application/json",
+            data: JSON.stringify(filename),
+            dataType: "json",
+            success: function(response) {
+                $("#result").html("<p>" + response.message + "</p>");
+            },
+        });
+    });
+});
+</script>
+
 {% endblock %}

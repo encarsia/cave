@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
+import shutil
+import time
+
 from flask import render_template, request
 from app import app, utils
 
@@ -54,4 +58,40 @@ def camera():
     for name, pi in app.config["PI_LIST"].items():
         if pi["camera"]:
             pis.append(name)
+
     return render_template('preview.html', pis=pis)
+
+
+@app.route("/_save_image", methods=["POST"])
+def save_image():
+    image = request.get_json()["name"]
+    key = utils.today()
+    ts = int(time.time())
+    ext = image.split(".")[1]
+    shutil.copyfile(image,
+                    os.path.join("app",
+                                 "static",
+                                 "log_images",
+                                 f"{key}_{ts}.{ext}",
+                                 )
+                    )
+
+    # update record log dict so the added file is displayed on page refresh
+    try:
+        utils.record_log[key]["images"].append(
+            os.path.join("static",
+                         "log_images",
+                         f"{key}_{ts}.{ext}"))
+    except KeyError:
+        # empty dict for date if not already existing
+        utils.record_log.setdefault(key, dict())
+        # empty list for images
+        utils.record_log[key]["images"] = list()
+        utils.record_log[key]["images"].append(
+            os.path.join("static",
+                         "log_images",
+                         f"{key}_{ts}.{ext}",
+                         )
+        )
+
+    return {"message": "Image saved."}
